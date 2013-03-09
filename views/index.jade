@@ -1,0 +1,16 @@
+h2= "Panasonc Temp Sensor " + device_id
+
+div#device(data-id= device_id)
+
+  table
+    tr
+      td Current Temp:
+      td#temp
+    tr
+      td Battery Level:
+      td#battery
+    tr
+      td Status
+      td#status
+
+script(type='text/javascript', src='/javascripts/device.js')
