@@ -34,7 +34,7 @@ exports.TempSensor = class TempSensor
 
   connect: () ->
     @socket = io.connect(api_url, 'force new connection': true)
-    @socket.on 'connect',
+    @socket.on 'connect', () =>
       @socket.emit('register', @id)
 
     @socket.on 'control-device', (settings) =>

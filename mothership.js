@@ -37,11 +37,12 @@ app.get('/sensor/:id/set/:key/:value', function(req, res){
   res.send('OK');
 })
 
+var readings = [];
+
 control_readings = function(readings){
   if(readings.battery && readings.battery < 1){
     return {init: true}
   }
-  return null;
 }
 
 //setup websockets
