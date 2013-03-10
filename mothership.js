@@ -38,11 +38,10 @@ app.get('/sensor/:id/set/:key/:value', function(req, res){
 })
 
 control_readings = function(readings){
-  console.log(readings)
-  if(readings.battery < 1){
+  if(readings.battery && readings.battery < 1){
     return {init: true}
   }
-  return null
+  return null;
 }
 
 //setup websockets
