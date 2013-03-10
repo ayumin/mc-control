@@ -61,6 +61,7 @@ io.sockets.on('connection', function(socket) {
         clients[i].emit('update', readings)
       }
     }
+
     //check for control response
     var message;
     if(message = control_readings(readings)){
