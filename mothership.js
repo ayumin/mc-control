@@ -38,7 +38,8 @@ app.get('/sensor/:id/set/:key/:value', function(req, res){
 })
 
 control_readings = function(readings){
-  if(readings.battery_level = 0){
+  console.log(readings)
+  if(readings.battery < 1){
     return {init: true}
   }
   return null
@@ -55,13 +56,13 @@ io.sockets.on('connection', function(socket) {
   //Sensor Reporting API
   socket.on('readings', function(readings) {
     io.sockets.in(readings.device_id).emit('update', readings)
-    var control_message;
-    if(control_message = control_readings(readings)){
+    var message;
+    if(message = control_readings(readings)){
       io.sockets.in(readings.device_id).emit('control-device', message)
     }
   })
 
 })
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
