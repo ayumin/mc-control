@@ -15,7 +15,7 @@ var redis_client = config.createRedisClient()
 
 //Consumer - Facing Sensor Page
 app.get('/consumer/:id', function(req, res){
-  res.render('index', {
+  res.render('device', {
     title: 'Panasonic.com',
     device_id: req.param('id')
   });
@@ -23,7 +23,7 @@ app.get('/consumer/:id', function(req, res){
 
 // Sensor Control API
 app.get('/sensor/:id', function(req, res){
-  res.render('index', {
+  res.render('device', {
     title: 'The Mothership',
     device_id: req.param('id')
   });
@@ -58,7 +58,7 @@ io.sockets.on('connection', function(socket) {
     var clients = io.sockets.clients(readings.device_id)
     for(var i = 0; i < clients.length; i++){
       if(clients[i] != socket){
-        clients[i].emit('update', readings)
+        clients[i].emit('readings', readings)
       }
     }
 
