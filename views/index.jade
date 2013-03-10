@@ -1,9 +1,10 @@
 h2= "Panasonc Temp Sensor " + device_id
 
-div.alert#control-message
-  button.close(data-dismiss="alert") &times;
-  strong Control Message
-  span.message
+div#alert
+  div.alert#control-message.fade.out
+    button.close(data-dismiss="alert") &times;
+    strong Control Message
+    span.message
 
 div#device(data-id= device_id)
 

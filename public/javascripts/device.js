@@ -19,10 +19,13 @@ $(function() {
     $('#status').text(readings.status);
   })
 
+  var alert_html = $('#control-message').html()
+  $('#control-message').remove();
+
   socket.on('control-device', function(message){
+    $('#alert').append(alert_html);
     $('#control-message .message').text(' ' + JSON.stringify(message));
     $('#control-message').show();
   })
 
-  $('#control-message').hide();
 })
