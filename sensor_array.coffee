@@ -6,8 +6,11 @@ n    = parseInt(argv[0])
 #to hold timers
 sensors = []
 
-for num in [1..n]
-  s = new sensor.TempSensor(num)
-  sensors[num] = s
-  kicker = () -> s.start()
-  setTimeout(kicker, 1000*Math.random())
+kick = (id) ->
+  func = () ->
+    s = new sensor.TempSensor(id)
+    sensors[id] = s
+    s.start()
+  setTimeout(func, Math.random()*1000)
+
+kick(num) for num in [1..n]
