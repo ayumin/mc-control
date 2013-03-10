@@ -1,24 +1,28 @@
 $(function() {
-  var socket = io.connect();
 
   device_id  = function() {
     return $('#device').attr('data-id');
   }
 
+  var socket = io.connect();
+
   //register interest in the list
   register = function(){
     socket.emit('register', device_id())
   }
-
-  register();
+  socket.on('connect', function() { register() })
 
   //setup the websocket
   socket.on('update', function(readings){
-    console.log('update');
     $('#temp').text(readings.temp);
     $('#battery').text(readings.battery);
     $('#status').text(readings.status);
-    console.log(readings);
   })
 
+  socket.on('control-device', function(message){
+    $('#control-message .message').text(' ' + JSON.stringify(message));
+    $('#control-message').show();
+  })
+
+  $('#control-message').hide();
 })

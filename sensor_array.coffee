@@ -6,7 +6,7 @@ n    = parseInt(argv[0])
 #to hold timers
 sensors = []
 
-for num in [0..n]
+for num in [1..n]
   s = new sensor.TempSensor(num)
   sensors[num] = s
   s.start()

@@ -21,15 +21,6 @@ app.get('/consumer/:id', function(req, res){
   });
 });
 
-//Sensor Reporting API
-app.post('/sensor/report/:id', function(req, res){
-  console.log(req.body);
-  //update listening websockets
-  io.sockets.in(req.param('id')).emit('update', req.body)
-  //ship it to tempodb
-  res.send('OK');
-})
-
 // Sensor Control API
 app.get('/sensor/:id', function(req, res){
   res.render('index', {
@@ -38,17 +29,20 @@ app.get('/sensor/:id', function(req, res){
   });
 });
 
-app.get('/sensor/:id/fail', function(req, res){
-  s = new sensor.TempSensor(req.param('id'));
-  s.fail();
+
+app.get('/sensor/:id/set/:key/:value', function(req, res){
+  message = {}
+  message[req.param('key')] = req.param('value')
+  io.sockets.in(req.param('id')).emit('control-device', message)
   res.send('OK');
 })
 
-app.get('/sensor/:id/set/:reading/:level', function(req, res){
-  s = new sensor.TempSensor(req.param('id'))
-  s.set_reading(req.param('reading'), req.param('level'));
-  res.send('OK');
-})
+control_readings = function(readings){
+  if(readings.battery_level = 0){
+    return {init: true}
+  }
+  return null
+}
 
 //setup websockets
 io.sockets.on('connection', function(socket) {
@@ -56,6 +50,15 @@ io.sockets.on('connection', function(socket) {
   socket.on('register', function(device_id) {
     console.log("register", device_id)
     socket.join(device_id)
+  })
+
+  //Sensor Reporting API
+  socket.on('readings', function(readings) {
+    io.sockets.in(readings.device_id).emit('update', readings)
+    var control_message;
+    if(control_message = control_readings(readings)){
+      io.sockets.in(readings.device_id).emit('control-device', message)
+    }
   })
 
 })
