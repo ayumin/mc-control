@@ -54,7 +54,14 @@ io.sockets.on('connection', function(socket) {
 
   //Sensor Reporting API
   socket.on('readings', function(readings) {
-    io.sockets.in(readings.device_id).emit('update', readings)
+    //broadcast to everyone in room besides this socket
+    var clients = io.sockets.clients(readings.device_id)
+    for(var i = 0; i < clients.length; i++){
+      if(clients[i] != socket){
+        clients[i].emit('update', readings)
+      }
+    }
+    //check for control response
     var message;
     if(message = control_readings(readings)){
       io.sockets.in(readings.device_id).emit('control-device', message)
