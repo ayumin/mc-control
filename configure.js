@@ -63,6 +63,7 @@ exports.createRedisClient = function(){
   });
 
   if(redis_password){
+    console.log("method=auth-redis");
     redis_client.auth(redis_password);
   }
   return redis_client
