@@ -10,6 +10,7 @@
     , "socket.io-client": "*"
     , "superagent": "*"
     , "redis" : "*"
+    , "node-uuid" : "*"
   }
   , "engines": {
     "node": "0.8.x",

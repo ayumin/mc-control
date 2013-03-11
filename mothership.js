@@ -70,7 +70,12 @@ io.sockets.on('connection', function(socket) {
     }
   })
 
+  socket.on('disconnect', function(){
+    console.log("WEBSOCKET CLOSED");
+  })
+
 })
 
+app.on('error', function(){ console.log(e) })
 app.listen(process.env.PORT || 3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
