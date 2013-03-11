@@ -1,3 +1,5 @@
 dl dt label{ font-size: 1.5em; font-weight: bold; padding-bottom: 10px; }
 dl dd code { max-width: 320px; overflow: scroll}
 .done { text-decoration: line-through }
+
+#status { font-weight: bold; }
