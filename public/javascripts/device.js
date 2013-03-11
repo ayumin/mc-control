@@ -8,7 +8,7 @@ $(function() {
 
   //register interest in the list
   register = function(){
-    socket.emit('register', device_id())
+    socket.emit('listen-device', device_id())
   }
   socket.on('connect', function() { register() })
 

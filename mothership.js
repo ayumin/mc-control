@@ -11,7 +11,14 @@ var io  = require('socket.io').listen(app);
 
 var config = require('./configure');
 config.configure(app, io);
-var redis_client = config.createRedisClient()
+var redis = config.createRedisClient()
+
+//Mothership
+app.get('/', function(req, res){
+  res.render('index', {
+    title: 'The Mothership'
+  });
+});
 
 //Consumer - Facing Sensor Page
 app.get('/consumer/:id', function(req, res){
@@ -48,9 +55,21 @@ control_readings = function(readings){
 //setup websockets
 io.sockets.on('connection', function(socket) {
 
-  socket.on('register', function(device_id) {
-    console.log("register", device_id)
+  socket.on('listen-device', function(device_id) {
     socket.join(device_id)
+    console.log("listen-device", device_id)
+  })
+
+  socket.on('listen-mothership', function() {
+    socket.join('mothership');
+  })
+
+  socket.on('register-device', function(device_id) {
+    socket.set('device-id', device_id, function(){
+      redis.sadd('devices', device_id, redis.print)
+      socket.join(device_id);
+    })
+    console.log("register-device", device_id)
   })
 
   //Sensor Reporting API
@@ -71,10 +90,28 @@ io.sockets.on('connection', function(socket) {
   })
 
   socket.on('disconnect', function(){
-    console.log("WEBSOCKET CLOSED");
+    //cleanup when a device disconnects
+    socket.get('device-id', function(err, id){
+      redis.srem('devices', id, redis.print)
+      console.log("device-disconnect=" + id);
+    })
   })
 
 })
+
+
+mothershipReadings = function(){
+  readings = {}
+  redis.scard('devices', function(error, connections){
+    readings.connections = connections;
+    redis.smembers('devices', function(error, devices){
+      readings.devices = devices;
+      io.sockets.in('mothership').emit('mothership-readings', readings);
+    })
+  })
+}
+
+setInterval(mothershipReadings, 2000);
 
 app.on('error', function(){ console.log(e) })
 app.listen(process.env.PORT || 3000);

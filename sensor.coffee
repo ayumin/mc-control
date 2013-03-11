@@ -35,7 +35,7 @@ exports.TempSensor = class TempSensor
   connect: () ->
     @socket = io.connect(api_url, 'force new connection': true)
     @socket.on 'connect', () =>
-      @socket.emit('register', @id)
+      @socket.emit('register-device', @id)
 
     @socket.on 'control-device', (settings) =>
       console.log('control-message: ', settings)
