@@ -128,6 +128,7 @@ io.sockets.on('connection', function(socket) {
   socket.on('disconnect', function(){
     //cleanup when a device disconnects
     socket.get('device-id', function(err, id){
+      redis.zrem('devices', id)
       console.log("device-disconnect=" + id);
     })
   })
