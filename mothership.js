@@ -119,7 +119,6 @@ io.sockets.on('connection', function(socket) {
 mothershipReadings = function(){
   readings = {}
   redis.zrange('devices', 0, -1, function(error, devices){
-    console.log(devices)
     devices = devices || [];
     readings.connections = devices.length;
     readings.devices = devices;
