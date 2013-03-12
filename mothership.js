@@ -63,8 +63,6 @@ tempodb_readings = function(readings){
     {key: 'temp:' + readings.device_id,    v: readings.temp},
   ];
 
-  console.log(data);
-
   tempodb.write_bulk(ts, data, function(result){
     var out = result.response;
     if (result.body) {
