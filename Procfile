@@ -1,3 +1,3 @@
 web: node mothership.js
-int_sensors: coffee sensor_array.coffee $SENSORS
-uuid_sensors: coffee sensor_array.coffee $SENSORS uuid
+int_sensor:  coffee sensor_array.coffee $SENSORS
+uuid_sensor: coffee sensor_array.coffee $SENSORS uuid
