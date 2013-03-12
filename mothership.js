@@ -15,7 +15,7 @@ var redis = config.createRedisClient()
 
 function time() { return (new Date()).getTime() }
 
-var connection_expiry_minutes = 5;
+var connection_expiry_minutes = 2;
 
 //Mothership
 app.get('/', function(req, res){
