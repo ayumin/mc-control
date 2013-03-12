@@ -17,6 +17,10 @@ var TempoDBClient = require('tempodb').TempoDBClient;
 var tempodb = new TempoDBClient(process.env.TEMPODB_API_KEY,
                                 process.env.TEMPODB_API_SECRET)
 
+function time() { return (new Date()).getTime() }
+
+var connection_expiry_minutes = 5;
+
 //Mothership
 app.get('/', function(req, res){
   res.render('index', {
@@ -70,6 +74,16 @@ tempodb_readings = function(readings){
 
 }
 
+refresh_device_connection = function(device_id) {
+  var t = time() + (60 * connection_expiry_minutes) ;
+  redis.zadd('devices', t, device_id)
+}
+
+prune_devices = function(){
+  redis.zremrangebyscore('devices', 0, time());
+}
+setInterval(prune_devices, 1000 * 30);
+
 //setup websockets
 io.sockets.on('connection', function(socket) {
 
@@ -84,14 +98,16 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('register-device', function(device_id) {
     socket.set('device-id', device_id, function(){
-      redis.sadd('devices', device_id, redis.print)
       socket.join(device_id);
+      refresh_device_connection(device_id);
     })
     console.log("register-device", device_id)
   })
 
   //Sensor Reporting API
   socket.on('readings', function(readings) {
+    refresh_device_connection(readings.device_id);
+
     //broadcast to everyone in room besides this socket
     var clients = io.sockets.clients(readings.device_id)
     for(var i = 0; i < clients.length; i++){
@@ -112,22 +128,20 @@ io.sockets.on('connection', function(socket) {
   socket.on('disconnect', function(){
     //cleanup when a device disconnects
     socket.get('device-id', function(err, id){
-      redis.srem('devices', id, redis.print)
       console.log("device-disconnect=" + id);
     })
   })
 
 })
 
-
 mothershipReadings = function(){
   readings = {}
-  redis.scard('devices', function(error, connections){
-    readings.connections = connections;
-    redis.smembers('devices', function(error, devices){
-      readings.devices = devices;
-      io.sockets.in('mothership').emit('mothership-readings', readings);
-    })
+  redis.zrange('devices', 0, -1, function(error, devices){
+    console.log(devices)
+    devices = devices || [];
+    readings.connections = devices.length;
+    readings.devices = devices;
+    io.sockets.in('mothership').emit('mothership-readings', readings);
   })
 }
 
