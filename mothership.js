@@ -13,10 +13,6 @@ var config = require('./configure');
 config.configure(app, io);
 var redis = config.createRedisClient()
 
-var TempoDBClient = require('tempodb').TempoDBClient;
-var tempodb = new TempoDBClient(process.env.TEMPODB_API_KEY,
-                                process.env.TEMPODB_API_SECRET)
-
 function time() { return (new Date()).getTime() }
 
 var connection_expiry_minutes = 5;
@@ -58,20 +54,6 @@ control_readings = function(readings){
   if(readings.battery && readings.battery < 1){
     return {init: true}
   }
-}
-
-tempodb_readings = function(readings){
-  var ts = new Date();
-  var data = [
-    {key: 'battery:' + readings.device_id, v: readings.battery},
-    {key: 'temp:' + readings.device_id,    v: readings.temp},
-  ];
-
-  tempodb.write_bulk(ts, data, function(result){
-    var out = result.response;
-    console.log('tempodb='+out);
-  })
-
 }
 
 refresh_device_connection = function(device_id) {
@@ -122,7 +104,6 @@ io.sockets.on('connection', function(socket) {
       io.sockets.in(readings.device_id).emit('control-device', message)
     }
 
-    tempodb_readings(readings)
   })
 
   socket.on('disconnect', function(){
