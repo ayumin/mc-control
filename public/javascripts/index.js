@@ -12,7 +12,7 @@ $(function() {
 
     $devices = $('#devices')
     $devices.empty()
-    $.each(readings.devices, function(i, device_name){
+    $.each(readings.devices.sort(), function(i, device_name){
       var $a = $('<a>').
         attr('href', '/sensor/' + device_name).
         text(device_name)
