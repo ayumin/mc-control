@@ -15,7 +15,7 @@ var redis = config.createRedisClient()
 
 function time() { return (new Date()).getTime() }
 
-var connection_expiry_minutes = 2;
+var connection_expiry_seconds = 20;
 
 //Mothership
 app.get('/', function(req, res){
@@ -57,14 +57,14 @@ control_readings = function(readings){
 }
 
 refresh_device_connection = function(device_id) {
-  var t = time() + (60 * connection_expiry_minutes * 1000) ;
+  var t = time() + (connection_expiry_seconds * 1000) ;
   redis.zadd('devices', t, device_id)
 }
 
 prune_devices = function(){
   redis.zremrangebyscore('devices', 0, time());
 }
-setInterval(prune_devices, 1000 * 30);
+setInterval(prune_devices, (connection_expiry_seconds * 1000 / 2));
 
 //setup websockets
 io.sockets.on('connection', function(socket) {
