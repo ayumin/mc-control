@@ -1,10 +1,7 @@
 /**
  * Module dependencies.
  */
-
-require('coffee-script');
 var express = require('express');
-var sensor = require('./sensor');
 
 var app = module.exports = express.createServer();
 var io  = require('socket.io').listen(app);
@@ -61,10 +58,6 @@ refresh_device_connection = function(device_id) {
   redis.zadd('devices', t, device_id)
 }
 
-prune_devices = function(){
-  redis.zremrangebyscore('devices', 0, time());
-}
-setInterval(prune_devices, (connection_expiry_seconds * 1000 / 2));
 
 //setup websockets
 io.sockets.on('connection', function(socket) {
