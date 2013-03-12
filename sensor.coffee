@@ -61,6 +61,7 @@ exports.TempSensor = class TempSensor
 
   # drain the battery
   start_battery_drain: (rate = battery_drain_rate) ->
+    rate  = parseInt(rate)
     drain = () => @battery_level -= 1
     @drain = setInterval(drain, rate + Math.random()*rate)
 
