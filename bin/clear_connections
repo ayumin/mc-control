@@ -1,0 +1,8 @@
+#! /usr/bin/env coffee
+
+config = require('../configure')
+redis  = config.createRedisClient()
+
+redis.del('devices', redis.print)
+
+process.exit(0)
