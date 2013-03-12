@@ -65,10 +65,7 @@ tempodb_readings = function(readings){
 
   tempodb.write_bulk(ts, data, function(result){
     var out = result.response;
-    if (result.body) {
-        out += ': ' + JSON.stringify(result.body);
-    }
-    console.log('tempodb='+out+'\n');
+    console.log('tempodb='+out);
   })
 
 }
