@@ -3,7 +3,7 @@ io         = require 'socket.io-client'
 
 api_url    = process.env.API_URL
 
-exports.battery_drain_rate = process.env.BATTERY_DRAIN || 0.5
+exports.battery_drain_rate = process.env.BATTERY_DRAIN || 5
 exports.readings_rate      = process.env.READINGS_INTERVAL || 3
 
 exports.TempSensor = class TempSensor
@@ -61,13 +61,13 @@ exports.TempSensor = class TempSensor
 
   # drain the battery
   start_battery_drain: (rate = exports.battery_drain_rate) ->
-    rate  = parseInt(rate) * 1000
+    rate  = parseFloat(rate) * 1000
     drain = () => @battery_level -= 1
     @drain = setInterval(drain, rate + Math.random()*rate)
 
   # report state to device API
   start_reporter: (rate = exports.readings_rate) ->
-    rate = parseInt(rate) * 1000
+    rate = parseFloat(rate) * 1000
     reporter = () =>
       readings =
         device_id: @id
