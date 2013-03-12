@@ -75,7 +75,7 @@ tempodb_readings = function(readings){
 }
 
 refresh_device_connection = function(device_id) {
-  var t = time() + (60 * connection_expiry_minutes) ;
+  var t = time() + (60 * connection_expiry_minutes * 1000) ;
   redis.zadd('devices', t, device_id)
 }
 
