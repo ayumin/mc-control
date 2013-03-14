@@ -12,6 +12,9 @@
     , "redis" : "*"
     , "node-uuid" : "*"
     , "tempodb" : "*"
+    , "moment" : "*"
+    , "async" : "*"
+
   }
   , "engines": {
     "node": "0.8.x",

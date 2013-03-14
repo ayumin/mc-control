@@ -1,6 +1,7 @@
 /**
  * Module dependencies.
  */
+var coffee = require('coffee-script')
 var express = require('express');
 
 var app = module.exports = express.createServer();
@@ -9,6 +10,8 @@ var io  = require('socket.io').listen(app);
 var config = require('./configure');
 config.configure(app, io);
 var redis = config.createRedisClient()
+
+var tempo = require('./tempo')
 
 function time() { return (new Date()).getTime() }
 
@@ -37,6 +40,7 @@ app.get('/sensor/:id', function(req, res){
   });
 });
 
+app.get('/sensor/:id/history/hour', tempo.history)
 
 app.get('/sensor/:id/set/:key/:value', function(req, res){
   message = {}
