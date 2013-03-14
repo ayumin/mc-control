@@ -45,6 +45,20 @@ app.get('/sensor/:id/set/:key/:value', function(req, res){
   res.send('OK');
 })
 
+app.get('/user/:user_id/devices', function(req, res) {
+  redis.lrange('user:#{req.params.user_id}', 0, -1, function(err, devices) {
+    console.log('err', err);
+    console.log('devices', devices);
+  });
+});
+
+app.post('/user/:user_id/devices', function(req, res) {
+  redis.lpush('user:#{req.params.user_id}', req.body.device, function(err, foo) {
+    console.log('err', err);
+    console.log('foo', foo);
+  });
+});
+
 var readings = [];
 
 control_readings = function(readings){
@@ -121,6 +135,8 @@ mothershipReadings = function(){
 
 setInterval(mothershipReadings, 2000);
 
-app.on('error', function(){ console.log(e) })
-app.listen(process.env.PORT || 3000);
-console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+app.on('error', function(e) { console.log('error:' + e) })
+
+app.listen(process.env.PORT || 3000, function() {
+  console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+});
