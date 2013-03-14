@@ -47,15 +47,13 @@ app.get('/sensor/:id/set/:key/:value', function(req, res){
 
 app.get('/user/:user_id/devices', function(req, res) {
   redis.lrange('user:#{req.params.user_id}', 0, -1, function(err, devices) {
-    console.log('err', err);
-    console.log('devices', devices);
+    res.send(JSON.stringify(devices));
   });
 });
 
 app.post('/user/:user_id/devices', function(req, res) {
   redis.lpush('user:#{req.params.user_id}', req.body.device, function(err, foo) {
-    console.log('err', err);
-    console.log('foo', foo);
+    res.send('ok');
   });
 });
 
