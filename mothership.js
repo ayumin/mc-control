@@ -46,19 +46,19 @@ app.get('/sensor/:id/set/:key/:value', function(req, res){
 })
 
 app.get('/user/:user/devices', function(req, res) {
-  redis.smembers('user:#{req.params.user}', function(err, devices) {
+  redis.smembers('user:' + req.params.user', function(err, devices) {
     res.send(JSON.stringify(devices));
   });
 });
 
 app.post('/user/:user/devices', function(req, res) {
-  redis.sadd('user:#{req.params.user}', req.body.device, function(err) {
+  redis.sadd('user:' + req.params.user, req.body.device, function(err) {
     res.send('ok');
   });
 });
 
 app.delete('/user/:user/devices/:device', function(req, res) {
-  redis.srem('user:#{req.params.user}', req.params.device, function(err) {
+  redis.srem('user:' + req.params.user, req.params.device, function(err) {
     res.send('ok');
   });
 });
