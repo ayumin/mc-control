@@ -45,20 +45,21 @@ app.get('/sensor/:id/set/:key/:value', function(req, res){
   res.send('OK');
 })
 
-app.get('/user/:user/devices', function(req, res) {
-  redis.smembers('user:' + req.params.user, function(err, devices) {
-    res.send(JSON.stringify(devices));
+app.get('/user/:user/device', function(req, res) {
+  redis.get('user:' + req.params.user + ':device', function(err, device) {
+    console.log('device', device);
+    res.send(JSON.stringify(device))
   });
 });
 
-app.post('/user/:user/devices', function(req, res) {
-  redis.sadd('user:' + req.params.user, req.body.device, function(err) {
+app.post('/user/:user/device', function(req, res) {
+  redis.set('user:' + req.params.user + ':device', req.body.device, function(err) {
     res.send('ok');
   });
 });
 
-app.delete('/user/:user/devices/:device', function(req, res) {
-  redis.srem('user:' + req.params.user, req.params.device, function(err) {
+app.delete('/user/:user/device', function(req, res) {
+  redis.del('user:' + req.params.user + ':device', function(err) {
     res.send('ok');
   });
 });
