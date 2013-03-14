@@ -46,7 +46,7 @@ app.get('/sensor/:id/set/:key/:value', function(req, res){
 })
 
 app.get('/user/:user/devices', function(req, res) {
-  redis.smembers('user:' + req.params.user', function(err, devices) {
+  redis.smembers('user:' + req.params.user, function(err, devices) {
     res.send(JSON.stringify(devices));
   });
 });
