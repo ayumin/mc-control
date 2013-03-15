@@ -59,14 +59,15 @@ refresh_device_connection = (device_id) ->
 device_key = (id) => "device:#{id}"
 
 last_readings = (readings, callback) ->
-  redis.hgetall device_key(readings.device_id), (err, result) ->
+  key = device_key(readings.device_id)
+  redis.hgetall key, (err, result) ->
     callback(result || {})
-    redis.hmset device_key, status:  readings.status
+    redis.hmset key, status:  readings.status
 
 # Setup WebSockets
 io.sockets.on "connection", (socket) ->
   socket.on "listen-device", (device_id) ->
-    redis.hdel(device_key(device_id))
+    redis.del(device_key(device_id))
     socket.join device_id
     console.log "listen-device", device_id
 
@@ -103,7 +104,7 @@ io.sockets.on "connection", (socket) ->
     #cleanup when a device disconnects
     socket.get "device-id", (err, id) ->
       redis.zrem "devices", id
-      redis.hdel(device_key(id))
+      redis.del(device_key(id))
       console.log "device-disconnect=" + id
 
 mothershipReadings = ->
