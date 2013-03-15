@@ -22,8 +22,9 @@ exports.history = (req, res) ->
     options = key: battery_key
     tempodb.read start, end, options, (result) ->
       console.log("tempdo-db-status=#{result.response}")
-      for event in result.body[0].data
-        history.battery.push(parseFloat(event.v))
+      try
+        for event in result.body[0].data
+          history.battery.push(parseFloat(event.v))
       cb()
 
   temp_data =  (cb) ->
@@ -31,17 +32,13 @@ exports.history = (req, res) ->
     options = key: temp_key
     tempodb.read start, end, options, (result) ->
       console.log("tempdo-db-status=#{result.response}")
-      for event in result.body[0].data
-        history.temp.push(parseFloat(event.v))
+      try
+        for event in result.body[0].data
+          history.temp.push(parseFloat(event.v))
       cb()
 
-  try
-    async.parallel
-      battery: battery_data
-      temp: temp_data
-      , () ->
-        res.json(history)
-
-  catch err
-    res.send('FAIL')
-    console.log(err)
+  async.parallel
+    battery: battery_data
+    temp: temp_data
+    , () ->
+      res.json(history)
