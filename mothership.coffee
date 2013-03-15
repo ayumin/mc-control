@@ -85,7 +85,7 @@ io.sockets.on "connection", (socket) ->
     if device
       refresh_device_connection device
       last_readings readings, (last) ->
-        console.log("LAST", last, readings)
+        #console.log("LAST", last, readings)
         if last.status == 'OK' and readings.status == 'FAIL'
           console.log("code=42 failure=true device=#{device}")
 
