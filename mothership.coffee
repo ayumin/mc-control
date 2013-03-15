@@ -74,6 +74,9 @@ io.sockets.on "connection", (socket) ->
   socket.on "readings", (readings) ->
     refresh_device_connection readings.device_id
 
+    logline = ("#{key}=#{value}" for key, value of readings).join(' ')
+    console.log(logline + " readings=true")
+
     #broadcast to everyone in room besides this socket
     for client in io.sockets.clients(readings.device_id)
       client.emit "readings", readings unless client is socket
