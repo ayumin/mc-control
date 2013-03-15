@@ -8,8 +8,8 @@ tempodb = new TempoDBClient(process.env.TEMPODB_API_KEY, process.env.TEMPODB_API
 exports.history = (req, res) ->
 
   device_id   = req.param('id')
-  battery_key = "battery:#{device_id}"
-  temp_key    = "temp:#{device_id}"
+  temp_key    = "device:ThermoStat.temp.id:#{device_id}.series"
+  battery_key = "device:ThermoStat.battery.id:#{device_id}.series"
   start       = moment().subtract('minutes', 20).toDate()
   end         = moment().toDate()
 
@@ -25,6 +25,8 @@ exports.history = (req, res) ->
       try
         for event in result.body[0].data
           history.battery.push(parseFloat(event.v))
+      catch err
+        console.log(err, result.response, result.body)
       cb()
 
   temp_data =  (cb) ->
@@ -35,10 +37,11 @@ exports.history = (req, res) ->
       try
         for event in result.body[0].data
           history.temp.push(parseFloat(event.v))
+      catch err
+        console.log(err, result.response, result.body)
       cb()
 
   async.parallel
     battery: battery_data
     temp: temp_data
-    , () ->
-      res.json(history)
+    , () -> res.json(history)
