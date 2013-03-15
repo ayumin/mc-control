@@ -32,6 +32,7 @@ app.get "/sensor/:id/set/:key/:value", (req, res) ->
   message[req.param("key")] = req.param("value")
 
   io.sockets.in(req.param('id')).emit('control-device', message)
+  res.setHeader "Access-Control-Allow-Origin", "*"
   res.send "OK"
 
 # User <-> Device API
