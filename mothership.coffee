@@ -87,7 +87,7 @@ io.sockets.on "connection", (socket) ->
       last_readings readings, (last) ->
         #console.log("LAST", last, readings)
         if last.status == 'OK' and readings.status == 'FAIL'
-          console.log("code=42 failure=true device=#{device}")
+          console.log("code=42 failure=true device_id=#{device}")
 
       logline = ("#{key}=#{value}" for key, value of readings).join(' ')
       console.log(logline + " readings=true")
