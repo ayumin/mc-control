@@ -56,9 +56,17 @@ refresh_device_connection = (device_id) ->
   t = time() + (connection_expiry_seconds * 1000)
   redis.zadd "devices", t, device_id
 
+device_key = (id) => "device:#{id}"
+
+last_readings = (readings, callback) ->
+  redis.hgetall device_key(readings.device_id), (err, result) ->
+    callback(result || {})
+    redis.hmset device_key, status:  readings.status
+
 # Setup WebSockets
 io.sockets.on "connection", (socket) ->
   socket.on "listen-device", (device_id) ->
+    redis.hdel(device_key(device_id))
     socket.join device_id
     console.log "listen-device", device_id
 
@@ -72,23 +80,30 @@ io.sockets.on "connection", (socket) ->
 
   #Sensor Reporting API
   socket.on "readings", (readings) ->
-    refresh_device_connection readings.device_id
+    device = readings.device_id
+    if device
+      refresh_device_connection device
+      last_readings readings, (last) ->
+        console.log("LAST", last, readings)
+        if last.status == 'OK' and readings.status == 'FAIL'
+          console.log("code=42 failure=true device=#{device}")
 
-    logline = ("#{key}=#{value}" for key, value of readings).join(' ')
-    console.log(logline + " readings=true")
+      logline = ("#{key}=#{value}" for key, value of readings).join(' ')
+      console.log(logline + " readings=true")
 
-    #broadcast to everyone in room besides this socket
-    for client in io.sockets.clients(readings.device_id)
-      client.emit "readings", readings unless client is socket
+      #broadcast to everyone in room besides this socket
+      for client in io.sockets.clients(readings.device_id)
+        client.emit "readings", readings unless client is socket
 
-    #check for control response
-    if message = control_readings(readings)
-      io.sockets.in(readings.device_id).emit('control-device', message)
+      #check for control response
+      if message = control_readings(readings)
+        io.sockets.in(readings.device_id).emit('control-device', message)
 
   socket.on "disconnect", ->
     #cleanup when a device disconnects
     socket.get "device-id", (err, id) ->
       redis.zrem "devices", id
+      redis.hdel(device_key(id))
       console.log "device-disconnect=" + id
 
 mothershipReadings = ->
