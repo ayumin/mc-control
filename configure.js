@@ -39,8 +39,7 @@ exports.configure = function(app, io) {
     io.enable('browser client minification');  // send minified client
     io.enable('browser client etag');          // apply etag caching logic based on version number
     io.enable('browser client gzip');          // gzip the file
-    console.log("set log level")
-    io.set('log level', 1);                    // reduce logging
+    io.set('log level', parseInt(process.env.SOCKETIO_LOG_LEVEL || 1));                    // reduce logging
   });
 
   io.configure('development', function(){
