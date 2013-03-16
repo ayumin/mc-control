@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+curl http://device-mothership.herokuapp.com/sensor/$1/set/status/OK
