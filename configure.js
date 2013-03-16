@@ -35,6 +35,12 @@ exports.configure = function(app, io) {
     , redisSub : exports.createRedisClient()
     , redisClient : exports.createRedisClient()
     }));
+
+    io.enable('browser client minification');  // send minified client
+    io.enable('browser client etag');          // apply etag caching logic based on version number
+    io.enable('browser client gzip');          // gzip the file
+    console.log("set log level")
+    io.set('log level', 1);                    // reduce logging
   });
 
   io.configure('development', function(){
