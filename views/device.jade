@@ -5,18 +5,25 @@ h2= "Panasonc ThermoStat " + device_id
 
 div#device(data-id= device_id)
 
-  table
+  table(style='width:250px')
     tr
       td Current Temp: &nbsp;
       td
         span#temp
         &deg;C
+      td
     tr
       td Battery Level: &nbsp;
-      td#battery
+      td#battery_readings
+
+    tr
+      td#battery_level(colspan="2")
+        .progress
+          .bar
     tr
       td Status &nbsp;
       td#status
+      td
 
 h3 Temperature
 div#tempchart

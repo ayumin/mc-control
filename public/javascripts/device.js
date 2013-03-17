@@ -27,8 +27,11 @@ $(function() {
   //update all the things when we get new readings
   socket.on('readings', function(readings){
     $('#temp').text(readings.temp);
-    $('#battery').text(readings.battery);
+    $('#battery_readings').text(readings.battery);
     $('#status').text(readings.status);
+
+    //update battery bar
+    set_battery(readings.battery);
 
     //update status string color
     if(readings.status == 'OK'){
@@ -66,6 +69,24 @@ $(function() {
   })
 
 })
+
+function set_battery(pct) {
+  this.last_battery = pct;
+
+  $bar = $('#battery_level .bar')
+  $bar.removeClass('bar-success');
+  $bar.removeClass('bar-warning');
+  $bar.removeClass('bar-danger');
+  $bar.css('width', pct + '%');
+
+  if (pct > 35) {
+    $bar.addClass('bar-success');
+  } else if (pct > 15) {
+    $bar.addClass('bar-warning');
+  } else {
+    $bar.addClass('bar-danger');
+  }
+}
 
 function chart(selector, data) {
   var w = 20,

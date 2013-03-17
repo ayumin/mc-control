@@ -13,7 +13,7 @@ exports.TempSensor = class TempSensor
   constructor: (@id) ->
 
   init: () ->
-    @battery_level = 100
+    @battery = 100
     @temp = Math.round((Math.random()*10) + 15)
     @status = 'OK'
 
@@ -62,7 +62,7 @@ exports.TempSensor = class TempSensor
   # drain the battery
   start_battery_drain: (rate = exports.battery_drain_rate) ->
     rate  = parseFloat(rate) * 1000
-    drain = () => @battery_level -= 1
+    drain = () => @battery -= 1
     @drain = setInterval(drain, rate + Math.random()*rate)
 
   # report state to device API
@@ -71,7 +71,7 @@ exports.TempSensor = class TempSensor
     reporter = () =>
       readings =
         device_id: @id
-        battery:   @battery_level
+        battery:   @battery
         temp:      @temp
         status:    @status
       @log()
@@ -82,7 +82,7 @@ exports.TempSensor = class TempSensor
   # log state to STDOUT
   log: () ->
     logline = "device=#{@id} "
-    logline += "battery=#{@battery_level} "
+    logline += "battery=#{@battery} "
     logline += "temp=#{@temp} "
     logline += "status=#{@status} "
     console.log(logline)
