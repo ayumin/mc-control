@@ -29,6 +29,7 @@ $(function() {
     $('#temp').text(readings.temp);
     $('#battery_readings').text(readings.battery);
     $('#status').text(readings.status);
+    $('#city_name').text(readings.city_name);
 
     //update battery bar
     set_battery(readings.battery);

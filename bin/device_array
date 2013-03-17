@@ -1,0 +1,43 @@
+#! /usr/bin/env coffee
+
+devices  = require '../ThermoStat'
+fs = require 'fs'
+
+argv = process.argv.slice(2)
+n    = parseInt(argv[0])
+mode = argv[1]
+
+console.log("Parsing Weather Information...")
+cities = fs.readdirSync("#{__dirname}/../cities")
+
+read   = (city) -> JSON.parse fs.readFileSync("#{__dirname}/../cities/#{city}")
+city_readings = {}
+
+city_readings = for city in cities
+  [city.replace('.json',''),
+   parseInt(forecast.temp.metric) for forecast in read(city).hourly_forecast]
+
+console.log("Weather Information Parsed")
+
+if mode == 'uuid'
+  uuid = require 'node-uuid'
+  next = (i) -> uuid.v4()
+else
+  next = (i) -> i
+
+next_city = (i) ->
+  city_readings[i%city_readings.length]
+
+#to hold timers
+sensors = []
+
+kick = (i) ->
+  #func = () ->
+    id = next(i)
+    city = next_city(i)
+    s = new devices.CityThermoStat(id, city[0], city[1])
+    sensors[id] = s
+    s.start()
+    #  setTimeout(func, Math.random()*1000)
+
+kick(num) for num in [1..n]
