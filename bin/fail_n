@@ -12,20 +12,11 @@ fail_url = (device_id) ->
   "#{process.env.API_URL}sensor/#{device_id}/set/status/FAIL"
 
 redis.zrange "devices", 0, -1, (error, devices) ->
-  funcs = []
-  funcs = for device_id in devices[0..n]
-    (callback) ->
-      console.log('fail', device_id)
-      console.log(fail_url(device_id))
-      agent
-        .get(fail_url(device_id))
-        .end (err, res) ->
-          console.log res if err
-          console.log('failed', device_id)
-          callback()
-
-  done = () ->
-    console.log('done')
-    process.exit(0)
-
-  async.parallel funcs, done
+  for device_id in devices[1..n]
+    console.log('fail', device_id)
+    console.log(fail_url(device_id))
+    agent
+      .get(fail_url(device_id))
+      .end (err, res) ->
+        console.log res if err
+        console.log('failed', device_id)
