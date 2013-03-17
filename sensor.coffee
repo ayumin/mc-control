@@ -1,4 +1,3 @@
-superagent = require 'superagent'
 io         = require 'socket.io-client'
 
 api_url    = process.env.API_URL

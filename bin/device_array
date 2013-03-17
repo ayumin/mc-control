@@ -32,12 +32,12 @@ next_city = (i) ->
 sensors = []
 
 kick = (i) ->
-  #func = () ->
+  func = () ->
     id = next(i)
     city = next_city(i)
     s = new devices.CityThermoStat(id, city[0], city[1])
     sensors[id] = s
     s.start()
-    #  setTimeout(func, Math.random()*1000)
+  setTimeout(func, Math.random()*1000)
 
 kick(num) for num in [1..n]

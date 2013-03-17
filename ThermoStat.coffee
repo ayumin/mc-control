@@ -1,8 +1,6 @@
-superagent = require 'superagent'
 io         = require 'socket.io-client'
 
 api_url    = process.env.API_URL
-
 exports.battery_drain_rate = process.env.BATTERY_DRAIN || 5
 exports.readings_rate      = process.env.READINGS_INTERVAL || 3
 
