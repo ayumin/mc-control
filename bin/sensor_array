@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+coffee sensor_array.coffee "$@"
