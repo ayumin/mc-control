@@ -14,7 +14,7 @@
     , "tempodb" : "*"
     , "moment" : "*"
     , "async" : "*"
-
+    , "nodemon" : "*"
   }
   , "engines": {
     "node": "0.8.x",
