@@ -79,9 +79,9 @@ function set_battery(pct) {
   $bar.removeClass('bar-danger');
   $bar.css('width', pct + '%');
 
-  if (pct > 35) {
+  if (pct > 30) {
     $bar.addClass('bar-success');
-  } else if (pct > 15) {
+  } else if (pct > 10) {
     $bar.addClass('bar-warning');
   } else {
     $bar.addClass('bar-danger');
