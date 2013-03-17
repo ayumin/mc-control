@@ -1,0 +1,31 @@
+#! /usr/bin/env coffee
+agent  = require 'superagent'
+config = require '../configure'
+async  = require 'async'
+
+redis    = config.createRedisClient()
+api_url  = process.env.API_URL
+argv     = process.argv.slice(2)
+n        = parseInt(argv[0])
+
+fail_url = (device_id) ->
+  "#{process.env.API_URL}sensor/#{device_id}/set/status/FAIL"
+
+redis.zrange "devices", 0, -1, (error, devices) ->
+  funcs = []
+  funcs = for device_id in devices[0..n]
+    (callback) ->
+      console.log('fail', device_id)
+      console.log(fail_url(device_id))
+      agent
+        .get(fail_url(device_id))
+        .end (err, res) ->
+          console.log res if err
+          console.log('failed', device_id)
+          callback()
+
+  done = () ->
+    console.log('done')
+    process.exit(0)
+
+  async.parallel funcs, done
