@@ -1,43 +1,49 @@
 style
   .chart rect { fill: steelblue; stroke: white; }
 
-h2= "Panasonc ThermoStat " + device_id
+h2 Virtual Thermostat Dashboard
 
 div#device(data-id= device_id)
 
-  table(style='width:250px')
+  table.table.table-striped.table-bordered#device-attributes
     tr
-      td Current City: &nbsp;
+      th Device ID
+      td= device_id
+    tr
+      th Current City
       td
         span#city_name
-      td
     tr
-      td Current Temp: &nbsp;
+      th Current Location
+      td
+        span#location
+    tr
+      th Current Temp
       td
         span#temp
         &deg;C
-      td
     tr
-      td Battery Level: &nbsp;
-      td#battery_readings
-
-    tr
-      td#battery_level(colspan="2")
+      th Battery Level
+      td#battery_level
+        span#battery_readings.pull-left
         .progress
           .bar
     tr
-      td Status &nbsp;
+      th Status
       td#status
-      td
 
-h3 Temperature
-div#tempchart
+.row
 
+  .span6
+    h3 Temperature
+    div#tempchart
 
-h3 Battery
-div#batterychart
+  .span6
+    h3 Battery
+    div#batterychart
 
-h3 Control Messages
-div#alerts
+.well#control_messages
+  h3 Control Messages
+  div#alerts
 
 script(type='text/javascript', src='/javascripts/device.js')

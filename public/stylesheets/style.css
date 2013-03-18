@@ -3,3 +3,37 @@ dl dd code { max-width: 320px; overflow: scroll}
 .done { text-decoration: line-through }
 
 #status { font-weight: bold; }
+
+#battery_readings {
+  margin-right: 8px;
+}
+
+#battery_readings:after {
+  content:"%"
+}
+
+#battery_level .progress {
+  margin-bottom: 0px;
+}
+
+#control_messages {
+  margin-top: 20px;
+  padding: 4px 12px;
+}
+
+#control_messages h3 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+#device-attributes {
+  width: 500px;
+}
+
+#device-attributes th {
+  white-space: nowrap;
+}
+
+#device-attributes td {
+  width: 100%;
+}
