@@ -119,7 +119,7 @@ exports.CityThermoStat = class CityThermoStat extends ThermoStat
       when "tokyo" then [35.689487,139.691706]
 
   location_jitter: () ->
-    ((Math.random() * 0.1) - 0.05).toFixed(4)
+    parseFloat(((Math.random() * 0.1) - 0.05).toFixed(4))
 
   next_temp: () ->
     @i = (@i + 1) % @readings.length
