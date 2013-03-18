@@ -8,6 +8,7 @@ config = require("./configure")
 config.configure app, io
 redis = config.createRedisClient()
 tempo = require("./tempo")
+moment = require('moment')
 connection_expiry_seconds = 30
 
 time = -> (new Date()).getTime()
@@ -97,6 +98,8 @@ io.sockets.on "connection", (socket) ->
         #console.log("LAST", last, readings)
         if last.status == 'OK' and readings.status == 'FAIL'
           console.log("code=42 failure=true device_id=#{device}")
+
+      readings.time = moment().format()
 
       logline = ("#{key}=#{value}" for key, value of readings).join(' ')
       console.log(logline + " readings=true")

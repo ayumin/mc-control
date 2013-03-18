@@ -36,7 +36,7 @@ exports.history = (req, res) ->
       console.log("tempdo-db-status=#{result.response}")
       try
         for event in result.body[0].data
-          history.temp.push(parseFloat(event.v))
+          history.temp.push(event)
       catch err
         console.log(err, result.response, result.body)
       cb()
