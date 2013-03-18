@@ -35,6 +35,17 @@ the device.
     TEMPODB_API_SECRET
     TEMPODB_API_SECURE
 
+## Commands
+
+    device_array <n> "uuid" [optional] - start a cluster of virtual devices
+    fail_device  <device_id> - fail a specific device
+    fix_device <device_id> - fix a specific device
+    fail_n <n> - fail N devices
+    reset - reset the redis database
+    set_temp <device_id> <temp> - set the temp of a specific device
+    update_config - update the app with the TEMPODB creds from l2temp
+    web - run the web server on PORT
+
 
 
 
