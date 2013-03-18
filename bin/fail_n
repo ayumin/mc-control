@@ -9,7 +9,7 @@ argv     = process.argv.slice(2)
 n        = parseInt(argv[0])
 
 fail_url = (device_id) ->
-  "#{process.env.API_URL}sensor/#{device_id}/set/status/FAIL"
+  "#{process.env.API_URL}/sensor/#{device_id}/set/status/FAIL"
 
 fail = (device_id, async_callback) ->
   console.log('fail', device_id)

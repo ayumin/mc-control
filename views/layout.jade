@@ -11,11 +11,11 @@ html
     script(type='text/javascript', src='/javascripts/d3.v3.min.js')
     meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0")
   body
-    div.navbar
+    div.navbar.navbar-fixed-top
       div.navbar-inner
         div.container
           a.brand(href="/")= title
 
-    div.container
+    div.container#body-content
       != body
 

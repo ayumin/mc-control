@@ -37,3 +37,7 @@ dl dd code { max-width: 320px; overflow: scroll}
 #device-attributes td {
   width: 100%;
 }
+
+#body-content {
+  margin-top: 50px;
+}
