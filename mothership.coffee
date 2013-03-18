@@ -14,6 +14,11 @@ time = -> (new Date()).getTime()
 
 # Mothership Home Page
 app.get "/", (req, res) ->
+  redis.hgetall "device:locations", (err, locations) ->
+    res.render "analytics", title:"Machine Cloud Control Center", locations:locations
+
+# Mothership Device List
+app.get "/devices", (req, res) ->
   res.render "index",
     title: "Machine Cloud Control Center"
 
@@ -22,9 +27,6 @@ app.get "/sensor/:id", (req, res) ->
   res.render "device",
     title: "Machine Cloud Control Center"
     device_id: req.param("id")
-
-app.get "/analytics", (req, res) ->
-  res.render "analytics", title:"Machine Cloud Control Center"
 
 # History API
 app.get "/sensor/:id/history/hour", tempo.history

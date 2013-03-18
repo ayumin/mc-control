@@ -11,7 +11,9 @@ h1 Analytics Dashboard
     dl.dl-horizontal
       dt Device Count
       dd#device-count
-      dt Message Throughput
-      dd#message-throughput
+
+ul#location-data
+  each location, device in locations
+    li(id="device-#{device}")= location
 
 script(type='text/javascript', src='/javascripts/analytics.js')
