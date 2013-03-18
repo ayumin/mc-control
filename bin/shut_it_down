@@ -1,0 +1,18 @@
+#! /usr/bin/env bash
+
+if [ "$1" = "" ]
+then
+  heroku scale uuid_sensor=0 -a mc-control
+  heroku scale int_sensor=0 -a mc-control
+  heroku run reset -a mc-control
+fi
+
+if [ "$1" = "tempo" ]
+then
+  heroku addons:remove tempodb -a l2tempo
+  echo "wait ..."
+  sleep 5
+  heroku addons:add tempodb:starter -a l2tempo
+  ./bin/update_config
+  heroku addons:open tempodb -a l2tempo
+fi

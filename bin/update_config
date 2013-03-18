@@ -1,4 +1,4 @@
 #! /usr/bin/env sh
 
-heroku config:set TEMPO_API_SECRET=$(heroku config:get TEMPODB_API_SECRET -a l2tempo)
-heroku config:set TEMPO_API_KEY=$(heroku config:get TEMPODB_API_KEY -a l2tempo)
+heroku config:set TEMPODB_API_SECRET=$(heroku config:get TEMPODB_API_SECRET -a l2tempo)
+heroku config:set TEMPODB_API_KEY=$(heroku config:get TEMPODB_API_KEY -a l2tempo)
