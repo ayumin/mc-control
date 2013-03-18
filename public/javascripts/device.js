@@ -169,7 +169,7 @@ function makeTempChart(seed_data) {
 console.log(seed_data)
   window.temp_chart = new Highcharts.Chart({
     chart: {
-      height: 110,
+      height: 200,
       renderTo: 'tempchart',
       type: 'spline',
       marginRight: 10,
