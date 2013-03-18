@@ -169,13 +169,16 @@ function makeTempChart(seed_data) {
 console.log(seed_data)
   window.temp_chart = new Highcharts.Chart({
     chart: {
+      height: 110,
       renderTo: 'tempchart',
       type: 'spline',
       marginRight: 10,
+      marginTop: 0,
       events: {},
     },
     title: {
-      text: 'Temperature Readings'
+      text: 'Temperature Readings',
+      style: { display:'none' }
     },
     xAxis: {
       type: 'datetime',
