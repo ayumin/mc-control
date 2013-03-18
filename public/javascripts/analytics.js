@@ -11,7 +11,13 @@ $(function() {
 
   var socket = io.connect();
 
-  // subscribe to list of devices
-  //
+  socket.on('connect', function(){
+    socket.emit('listen-mothership');
+  });
+
+  socket.on('mothership-readings', function(readings) {
+    $('#device-count').text(readings.connections)
+    console.log('readings', readings);
+  });
 
 });
