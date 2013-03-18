@@ -16,6 +16,10 @@ $(function() {
   }
   socket.on('connect', function() { register() })
 
+  function bootstrap_highcharts(i){
+    return {x: (new Date() - ((5-i)*1000)), y: 0};
+  }
+
   function bootstrap(){
     return {time: 0, value: 0};
   }
@@ -26,6 +30,7 @@ $(function() {
     var seed = $.map(res.temp.slice(-20,-1), function(temp) {
       return {x: new Date(temp.t), y: temp.v}
     })
+    if(seed.length == 0) seed = d3.range(5).map(bootstrap_highcharts)
     makeTempChart(seed)
   })
 
