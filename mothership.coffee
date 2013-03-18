@@ -7,7 +7,7 @@ redis = config.createRedisClient()
 tempo = require("./tempo")
 moment = require('moment')
 
-connection_expiry_seconds = 10
+connection_expiry_seconds = parseInt(process.env.CONNECTION_EXPIRY || "30")
 
 time = -> (new Date()).getTime()
 
