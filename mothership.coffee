@@ -78,9 +78,9 @@ last_readings = (readings, callback) ->
   redis.hgetall key, (err, result) ->
     callback(result || {})
     redis.hmset key, status:  readings.status
-    location = {}
-    location[readings.device_id] = "#{readings.lat},#{readings.long}"
-    redis.hmset "device:locations", location
+    # location = {}
+    # location[readings.device_id] = "#{readings.lat},#{readings.long}"
+    # redis.hmset "device:locations", location
 
 # Setup WebSockets
 io.sockets.on "connection", (socket) ->
