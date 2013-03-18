@@ -11,12 +11,17 @@ n        = parseInt(argv[0])
 fail_url = (device_id) ->
   "#{process.env.API_URL}sensor/#{device_id}/set/status/FAIL"
 
+fail = (device_id, async_callback) ->
+  console.log('fail', device_id)
+  console.log(fail_url(device_id))
+  agent
+    .get(fail_url(device_id))
+    .end (err, res) ->
+      console.log err if err
+      console.log('failed', device_id)
+      async_callback()
+
 redis.zrange "devices", 0, -1, (error, devices) ->
-  for device_id in devices[1..n]
-    console.log('fail', device_id)
-    console.log(fail_url(device_id))
-    agent
-      .get(fail_url(device_id))
-      .end (err, res) ->
-        console.log res if err
-        console.log('failed', device_id)
+  async.parallel (devices[1..n].map (device_id) ->
+    (callback) -> fail(device_id, callback)),
+    () -> process.exit(0)
