@@ -96,7 +96,7 @@ function set_battery(pct) {
 
 function chart(selector, data) {
   var w = 20,
-      h = 80;
+      h = 40;
 
   var x = d3.scale.linear()
       .domain([0, 1])

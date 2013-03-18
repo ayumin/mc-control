@@ -5,42 +5,43 @@ h2 Virtual Thermostat Dashboard
 
 div#device(data-id= device_id)
 
-  table.table.table-striped.table-bordered#device-attributes
-    tr
-      th Device ID
-      td= device_id
-    tr
-      th Current City
-      td
-        span#city_name
-    tr
-      th Current Location
-      td
-        span#location
-    tr
-      th Current Temp
-      td
-        span#temp
-        &deg;C
-    tr
-      th Battery Level
-      td#battery_level
-        span#battery_readings.pull-left
-        .progress
-          .bar
-    tr
-      th Status
-      td#status
+  .row
 
-.row
+    table.span6.table.table-striped.table-bordered#device-attributes
+      tr
+        th Device ID
+        td= device_id
+      tr
+        th Current City
+        td
+          span#city_name
+      tr
+        th Current Location
+        td
+          span#location
+      tr
+        th Current Temp
+        td
+          span#temp
+          &deg;C
+      tr
+        th Battery Level
+        td#battery_level
+          span#battery_readings.pull-left
+          .progress
+            .bar
+      tr
+        th Status
+        td#status
 
-  .span6
-    h3 Temperature
-    div#tempchart
 
-  .span6
-    h3 Battery
-    div#batterychart
+    #graphs.span6
+
+      h3 Temperature
+      div#tempchart
+
+      h3 Battery
+      div#batterychart
 
 .well#control_messages
   h3 Control Messages
