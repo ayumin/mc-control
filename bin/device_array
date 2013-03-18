@@ -2,20 +2,31 @@
 
 devices  = require '../ThermoStat'
 fs = require 'fs'
+path = require 'path'
 
 argv = process.argv.slice(2)
 n    = parseInt(argv[0])
 mode = argv[1]
 
 console.log("Parsing Weather Information...")
-cities = fs.readdirSync("#{__dirname}/../cities")
 
-read   = (city) -> JSON.parse fs.readFileSync("#{__dirname}/../cities/#{city}")
-city_readings = {}
+GEOCODER = JSON.parse(fs.readFileSync(__dirname + '/../lat_longs.json'))
+cities   = fs.readdirSync("#{__dirname}/../cities")
 
-city_readings = for city in cities
-  [city.replace('.json',''),
-   parseInt(forecast.temp.metric) for forecast in read(city).hourly_forecast]
+read = (slug) ->
+  JSON.parse fs.readFileSync("#{__dirname}/../cities/#{slug}")
+
+city_readings = cities.map (city_file) ->
+  slug = path.basename(city_file, '.json')
+  [country, city] = slug.split('-')
+  [lat, long]     = GEOCODER[city] || [42,42]
+
+  location:
+    country: country
+    city: city
+    lat: lat
+    long: long
+  readings: (parseInt(forecast.temp.metric) for forecast in read(city_file).hourly_forecast)
 
 console.log("Weather Information Parsed")
 
@@ -34,8 +45,8 @@ sensors = []
 kick = (i) ->
   func = () ->
     id = next(i)
-    city = next_city(i)
-    s = new devices.CityThermoStat(id, city[0], city[1])
+    report = next_city(i)
+    s = new devices.CityThermoStat(id, report)
     sensors[id] = s
     s.start()
   setTimeout(func, Math.random()*1000)

@@ -1,0 +1,25 @@
+#! /usr/bin/env bash
+
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/Japan/chiba.json > ./cities/Japan-chiba.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/Japan/gifu.json > ./cities/Japan-gifu.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/Japan/kyoto.json > ./cities/Japan-kyoto.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/Japan/osaka.json > ./cities/Japan-osaka.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/Japan/tokyo.json > ./cities/Japan-tokyo.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/Japan/yokohama.json > ./cities/Japan-yokohama.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/Japan/kobe.json > ./cities/Japan-kobe.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/Japan/nagano.json > ./cities/Japan-nagano.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/china/hongkong.json > ./cities/china-hongkong.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/china/shanghai.json > ./cities/china-shanghai.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/china/beijing.json > ./cities/china-beijing.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/korea/seoul.json > ./cities/korea-seoul.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/korea/pusan.json > ./cities/korea-pusan.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/singapore/singapore.json > ./cities/singapore-singapore.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/indonesia/jakarta.json > ./cities/indonesia-jakarta.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/vietnam/saigon.json > ./cities/vietname-saigon.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/philippines/manila.json > ./cities/phillippines-manila.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/india/mumbai.json > ./cities/india-mumbai.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/pakistan/karachi.json > ./cities/pakistan-karachi.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/taiwan/taipei.json > ./cities/taiwan-taipei.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/thailand/bangkok.json > ./cities/thailand-bangkok.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/nepal/kathmandu.json > ./cities/nepal-kathmandu.json
+curl http://api.wunderground.com/api/f6f02761b384feaf/hourly/q/china/chengdu.json > ./cities/china-chengdu.json

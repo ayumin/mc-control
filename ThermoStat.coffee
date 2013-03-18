@@ -98,25 +98,19 @@ exports.RandomThermoStat = class RandomThermoStat extends ThermoStat
 
 exports.CityThermoStat = class CityThermoStat extends ThermoStat
 
-  constructor: (@id, @city_name, @readings) ->
+  constructor: (@id, @weather_report) ->
     super(@id)
-    @location = @city_location(@city_name)
-    @location[0] += @location_jitter()
-    @location[1] += @location_jitter()
+    location = @weather_report.location
+    @city = location.city
+    @country = location.country
+    @lat = location.lat + @location_jitter()
+    @long = location.long + @location_jitter()
+    @readings = @weather_report.readings
 
   init: () ->
     super
     @temp = @readings[0]
     @i = 0
-
-  city_location: (name) ->
-    switch name
-      when "ciba" then [35.605057,140.123306]
-      when "gifu" then [35.423298,136.760654]
-      when "kyoto" then [35.011636,135.768029]
-      when "osaka" then [34.693738,135.502165]
-      when "shizuoka" then [34.975562,138.382760]
-      when "tokyo" then [35.689487,139.691706]
 
   location_jitter: () ->
     (Math.random() * 0.1) - 0.05
@@ -127,9 +121,10 @@ exports.CityThermoStat = class CityThermoStat extends ThermoStat
 
   take_readings: () ->
     readings = super
-    readings.city_name = @city_name
-    readings.lat = @location[0]
-    readings.long = @location[1]
+    readings.city    = @city
+    readings.country = @country
+    readings.lat = @lat
+    readings.long = @long
     readings
 
   # start the timers
