@@ -11,31 +11,28 @@ connection_expiry_seconds = 10
 
 time = -> (new Date()).getTime()
 
-app = express.createServer(
-  express.basicAuth (user, pass, cb) ->
-    console.log "WEEEEE"
-    if pass is process.env.HTTP_PASSWORD
-      console.log "yes!"
-      cb null, pass
-    else
-      console.log "no!"
-      cb "fail"
-)
+app = express.createServer()
+
+ensure_auth = express.basicAuth (user, pass, cb) ->
+  if pass is process.env.HTTP_PASSWORD
+    cb null, pass
+  else
+    cb "fail"
 
 io = require("socket.io").listen(app)
 config.configure app, io
 
 # Mothership Home Page
-app.get "/", (req, res) ->
+app.get "/", ensure_auth, (req, res) ->
   res.render "analytics", title:"Machine Cloud Control Center"
 
 # Mothership Device List
-app.get "/devices", (req, res) ->
+app.get "/devices", ensure_auth, (req, res) ->
   res.render "index",
     title: "Machine Cloud Control Center"
 
 # Sensor Control Interface
-app.get "/sensor/:id", (req, res) ->
+app.get "/sensor/:id", ensure_auth, (req, res) ->
   res.render "device",
     title: "Machine Cloud Control Center"
     device_id: req.param("id")
