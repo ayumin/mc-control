@@ -106,7 +106,7 @@ io.sockets.on "connection", (socket) ->
         #console.log("LAST", last, readings)
         if last.status == 'OK' and readings.status == 'FAIL'
           redis.hmget "device:locations", device, (err, location) ->
-            [lat, long] = location.split(",")
+            [lat, long] = (location || "").toString().split(",")
             console.log("code=42 failure=true device_id=#{device} lat=#{lat} long=#{long}")
 
       readings.time = moment().format()
