@@ -103,8 +103,8 @@ exports.CityThermoStat = class CityThermoStat extends ThermoStat
     location = @weather_report.location
     @city = location.city
     @country = location.country
-    @lat = location.lat + @location_jitter()
-    @long = location.long + @location_jitter()
+    @lat = location.lat + @jitter_location()
+    @long = location.long + @jitter_location()
     @readings = @weather_report.readings
 
   init: () ->
@@ -112,8 +112,9 @@ exports.CityThermoStat = class CityThermoStat extends ThermoStat
     @temp = @readings[0]
     @i = 0
 
-  location_jitter: () ->
-    (Math.random() * 0.1) - 0.05
+  jitter_location: (location) ->
+    location += ((Math.random() * 0.1) - 0.05)
+    parseFloat(location.toFixed(4))
 
   next_temp: () ->
     @i = (@i + 1) % @readings.length
