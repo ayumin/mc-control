@@ -20,7 +20,7 @@ app.get "/", (req, res) ->
 # Sensor Control Interface
 app.get "/sensor/:id", (req, res) ->
   res.render "device",
-    title: "Virtual Thermostat Dashboard"
+    title: "Machine Cloud Control Center"
     device_id: req.param("id")
 
 # History API
