@@ -48,3 +48,7 @@ dl dd code { max-width: 320px; overflow: scroll}
   height: 600px;
   margin-top: 10px;
 }
+
+#location-data {
+  display: none;
+}

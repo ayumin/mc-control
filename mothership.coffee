@@ -24,7 +24,9 @@ app.get "/sensor/:id", (req, res) ->
     device_id: req.param("id")
 
 app.get "/analytics", (req, res) ->
-  res.render "analytics", title:"Machine Cloud Control Center"
+  redis.hgetall "device:locations", (err, locations) ->
+    console.log "locations", locations
+    res.render "analytics", title:"Machine Cloud Control Center", locations:locations
 
 # History API
 app.get "/sensor/:id/history/hour", tempo.history

@@ -20,4 +20,18 @@ $(function() {
     console.log('readings', readings);
   });
 
+  $('#location-data li').each(function() {
+    var id = $(this).attr('id');
+    var parts = $(this).text().split(',')
+    var loc = new google.maps.LatLng(parseFloat(parts[0]), parseFloat(parts[1]));
+    var marker = new google.maps.Marker({
+      position: loc,
+      map: map,
+      title: 'Device ' + id
+    });
+    var infowindow = new google.maps.InfoWindow({
+      content: 'Device ' + id
+    });
+  });
+
 });
