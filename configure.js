@@ -21,21 +21,10 @@ exports.configure = function(app, io) {
     app.use(express.errorHandler());
   });
 
-  var RedisStore = require('socket.io/lib/stores/redis');
-
   io.configure('production', function () {
     if(process.env.FORCE_XHR_POLLING){
       io.set("transports", ["xhr-polling"]);
       io.set("polling duration", 10);
-    }
-
-    if(! process.env.SINGLE_DYNO_MODE ) {
-      io.set('store', new RedisStore({
-        redis    : redis
-      , redisPub : exports.createRedisClient()
-      , redisSub : exports.createRedisClient()
-      , redisClient : exports.createRedisClient()
-      }));
     }
 
     io.enable('browser client minification');  // send minified client
@@ -44,12 +33,17 @@ exports.configure = function(app, io) {
     io.set('log level', parseInt(process.env.SOCKETIO_LOG_LEVEL || 1));                    // reduce logging
   });
 
-  io.configure('development', function(){
-    io.set('store', new RedisStore({
-      redisPub : exports.createRedisClient()
-    , redisSub : exports.createRedisClient()
-    , redisClient : exports.createRedisClient()
-    }));
+  //redis pub/sub
+  io.configure(function() {
+    if(! process.env.SINGLE_DYNO_MODE ) {
+      var RedisStore = require('socket.io/lib/stores/redis');
+      io.set('store', new RedisStore({
+        redis    : redis
+      , redisPub : exports.createRedisClient()
+      , redisSub : exports.createRedisClient()
+      , redisClient : exports.createRedisClient()
+      }));
+    }
   })
 }
 
