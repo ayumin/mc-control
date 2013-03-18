@@ -22,6 +22,7 @@ the device.
     API_URL - url sensors connect to
     BATTERY_DRAIN - rate of battery drain in one percent per seconds
     TEMP_RATE - number of seconds between using next temp reading
+    READINGS_INTERVAL - rate, in seconds, for each reading
     SENSORS - number of device connections opened by the `int_sensor` and `uuid_sensor` processes
     NODE_ENV
 
