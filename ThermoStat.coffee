@@ -101,8 +101,8 @@ exports.CityThermoStat = class CityThermoStat extends ThermoStat
   constructor: (@id, @city_name, @readings) ->
     super(@id)
     @location = @city_location(@city_name)
-    @location[0] += @location_jitter()
-    @location[1] += @location_jitter()
+    @location[0] = @jitter_location(@location[0])
+    @location[1] = @jitter_location(@location[1])
 
   init: () ->
     super
@@ -118,8 +118,9 @@ exports.CityThermoStat = class CityThermoStat extends ThermoStat
       when "shizuoka" then [34.975562,138.382760]
       when "tokyo" then [35.689487,139.691706]
 
-  location_jitter: () ->
-    parseFloat(((Math.random() * 0.1) - 0.05).toFixed(4))
+  jitter_location: (location) ->
+    location += ((Math.random() * 0.1) - 0.05)
+    parseFloat(location.toFixed(4))
 
   next_temp: () ->
     @i = (@i + 1) % @readings.length
