@@ -1,17 +1,29 @@
 # Device MotherShip
 #
 coffee = require("coffee-script")
-express = require("express")
-app = module.exports = express.createServer()
-io = require("socket.io").listen(app)
 config = require("./configure")
-config.configure app, io
+express = require("express")
 redis = config.createRedisClient()
 tempo = require("./tempo")
 moment = require('moment')
+
 connection_expiry_seconds = 30
 
 time = -> (new Date()).getTime()
+
+app = express.createServer(
+  express.basicAuth (user, pass, cb) ->
+    console.log "WEEEEE"
+    if pass is process.env.HTTP_PASSWORD
+      console.log "yes!"
+      cb null, pass
+    else
+      console.log "no!"
+      cb "fail"
+)
+
+io = require("socket.io").listen(app)
+config.configure app, io
 
 # Mothership Home Page
 app.get "/", (req, res) ->
