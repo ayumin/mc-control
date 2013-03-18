@@ -15,7 +15,7 @@ time = -> (new Date()).getTime()
 # Mothership Home Page
 app.get "/", (req, res) ->
   res.render "index",
-    title: "Machine Cloud Dashboard"
+    title: "Machine Cloud Control Center"
 
 # Sensor Control Interface
 app.get "/sensor/:id", (req, res) ->
