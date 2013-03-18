@@ -15,12 +15,12 @@ time = -> (new Date()).getTime()
 # Mothership Home Page
 app.get "/", (req, res) ->
   res.render "index",
-    title: "The Mothership"
+    title: "Machine Cloud Dashboard"
 
 # Sensor Control Interface
 app.get "/sensor/:id", (req, res) ->
   res.render "device",
-    title: "The Mothership"
+    title: "Virtual Thermostat Dashboard"
     device_id: req.param("id")
 
 # History API
