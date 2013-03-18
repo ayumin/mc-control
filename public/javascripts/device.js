@@ -20,11 +20,11 @@ $(function() {
     return {time: 0, value: 0};
   }
 
-  var temp_data = d3.range(33).map(bootstrap)
+  var temp_data = d3.range(28).map(bootstrap)
   var temp_t    = 0;
   var temp_chart = chart("#tempchart", temp_data);
 
-  var battery_data = d3.range(33).map(bootstrap)
+  var battery_data = d3.range(28).map(bootstrap)
   var battery_t    = 0;
   var battery_chart = chart("#batterychart", battery_data);
 
@@ -34,6 +34,7 @@ $(function() {
     $('#battery_readings').text(readings.battery);
     $('#status').text(readings.status);
     $('#city_name').text(readings.city_name);
+    $('#location').text(readings.lat + ', ' + readings.long);
 
     //update battery bar
     set_battery(readings.battery);
