@@ -9,38 +9,52 @@ $(function() {
     streetViewControl: false
   });
 
-  var markers = [];
-
   var socket = io.connect();
 
   socket.on('connect', function(){
     socket.emit('listen-mothership');
   });
 
-  socket.on('mothership-readings', function(readings) {
-    console.log('readings', readings);
+  var known_devices = [];
+  var markers = {};
 
+  socket.on('mothership-readings', function(readings) {
     $('#device-count').text(readings.connections)
 
-    $(markers).each(function() {
-      this.setMap(null);
-    });
-
-    markers = [];
+    var current_devices = [];
 
     $(readings.devices).each(function() {
       var device = this.toString();
 
-      if (readings.locations[device]) {
-        var parts = readings.locations[device].split(',');
-        var loc = new google.maps.LatLng(parseFloat(parts[0]), parseFloat(parts[1]));
-        var marker = new google.maps.Marker({
-          position: loc,
-          map: map,
-          title: 'Device ' + device
-        });
-        markers.push(marker);
-      }
+      if (!readings.locations || !readings.locations[device])
+        return;
+
+      current_devices.push(device);
+
+      if (known_devices.indexOf(device) != -1)
+        return;
+
+      var parts = readings.locations[device].split(',');
+      var loc = new google.maps.LatLng(parseFloat(parts[0]), parseFloat(parts[1]));
+      var marker = new google.maps.Marker({
+        position: loc,
+        map: map,
+        title: 'Device ' + device
+      });
+      markers[device] = marker;
+
+      known_devices.push(device);
+    });
+
+    var gone = known_devices.filter(function(item) {
+      return(current_devices.indexOf(item) == -1);
+    });
+
+    $(gone).each(function() {
+      var device = this.toString();
+      markers[device].setMap(null);
+      delete markers[device];
+      known_devices.splice(known_devices.indexOf(device), 1);
     });
   });
 
