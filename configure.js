@@ -29,12 +29,14 @@ exports.configure = function(app, io) {
       io.set("polling duration", 10);
     }
 
-    io.set('store', new RedisStore({
-      redis    : redis
-    , redisPub : exports.createRedisClient()
-    , redisSub : exports.createRedisClient()
-    , redisClient : exports.createRedisClient()
-    }));
+    if(! process.env.SINGLE_DYNO_MODE ) {
+      io.set('store', new RedisStore({
+        redis    : redis
+      , redisPub : exports.createRedisClient()
+      , redisSub : exports.createRedisClient()
+      , redisClient : exports.createRedisClient()
+      }));
+    }
 
     io.enable('browser client minification');  // send minified client
     io.enable('browser client etag');          // apply etag caching logic based on version number
