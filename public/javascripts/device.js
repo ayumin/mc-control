@@ -33,7 +33,7 @@ $(function() {
     $('#temp').text(readings.temp);
     $('#battery_readings').text(readings.battery);
     $('#status').text(readings.status);
-    $('#city_name').text(readings.city_name);
+    $('#city_name').text(readings.city_name.capitalize());
     $('#location').text(readings.lat + ', ' + readings.long);
 
     //update battery bar
