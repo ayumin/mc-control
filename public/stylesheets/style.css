@@ -49,10 +49,6 @@ dl dd code { max-width: 320px; overflow: scroll}
   margin-top: 10px;
 }
 
-#location-data {
-  display: none;
-}
-
 #tempchart {
   margin-bottom: 6px;
 }

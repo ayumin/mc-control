@@ -9,6 +9,8 @@ $(function() {
     streetViewControl: false
   });
 
+  var markers = [];
+
   var socket = io.connect();
 
   socket.on('connect', function(){
@@ -16,21 +18,29 @@ $(function() {
   });
 
   socket.on('mothership-readings', function(readings) {
-    $('#device-count').text(readings.connections)
     console.log('readings', readings);
-  });
 
-  $('#location-data li').each(function() {
-    var id = $(this).attr('id');
-    var parts = $(this).text().split(',')
-    var loc = new google.maps.LatLng(parseFloat(parts[0]), parseFloat(parts[1]));
-    var marker = new google.maps.Marker({
-      position: loc,
-      map: map,
-      title: 'Device ' + id
+    $('#device-count').text(readings.connections)
+
+    $(markers).each(function() {
+      this.setMap(null);
     });
-    var infowindow = new google.maps.InfoWindow({
-      content: 'Device ' + id
+
+    markers = [];
+
+    $(readings.devices).each(function() {
+      var device = this.toString();
+
+      if (readings.locations[device]) {
+        var parts = readings.locations[device].split(',');
+        var loc = new google.maps.LatLng(parseFloat(parts[0]), parseFloat(parts[1]));
+        var marker = new google.maps.Marker({
+          position: loc,
+          map: map,
+          title: 'Device ' + device
+        });
+        markers.push(marker);
+      }
     });
   });
 

@@ -15,8 +15,7 @@ time = -> (new Date()).getTime()
 
 # Mothership Home Page
 app.get "/", (req, res) ->
-  redis.hgetall "device:locations", (err, locations) ->
-    res.render "analytics", title:"Machine Cloud Control Center", locations:locations
+  res.render "analytics", title:"Machine Cloud Control Center"
 
 # Mothership Device List
 app.get "/devices", (req, res) ->
@@ -123,9 +122,11 @@ mothershipReadings = ->
   readings = {}
   redis.zrange "devices", 0, -1, (error, devices) ->
     devices = devices or []
-    readings.connections = devices.length
-    readings.devices = devices
-    io.sockets.in('mothership').emit('mothership-readings', readings);
+    redis.hgetall "device:locations", (err, locations) ->
+      readings.connections = devices.length
+      readings.devices = devices
+      readings.locations = locations
+      io.sockets.in('mothership').emit('mothership-readings', readings)
 
 setInterval mothershipReadings, 2000
 
