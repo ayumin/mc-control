@@ -1,0 +1,7 @@
+#! /usr/bin/env coffee
+config = require '../configure'
+redis  = config.createRedisClient()
+redis.flushdb (err, res) ->
+  console.log(err) if err
+  console.log(res)
+  process.exit(0)
