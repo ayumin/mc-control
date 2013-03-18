@@ -103,8 +103,8 @@ exports.CityThermoStat = class CityThermoStat extends ThermoStat
     location = @weather_report.location
     @city = location.city
     @country = location.country
-    @lat = location.lat + @jitter_location()
-    @long = location.long + @jitter_location()
+    @lat  = @jitter_location(location.lat)
+    @long = @jitter_location(location.long)
     @readings = @weather_report.readings
 
   init: () ->
