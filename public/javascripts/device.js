@@ -20,9 +20,14 @@ $(function() {
     return {time: 0, value: 0};
   }
 
-  var temp_data = d3.range(28).map(bootstrap)
-  var temp_t    = 0;
-  var temp_chart = chart("#tempchart", temp_data);
+  Highcharts.setOptions({global: { useUTC: false } });
+
+ $.getJSON(window.location + '/history/hour', function(res, data, xhr) {
+    var seed = $.map(res.temp.slice(-20,-1), function(temp) {
+      return {x: new Date(temp.t), y: temp.v}
+    })
+    makeTempChart(seed)
+  })
 
   var battery_data = d3.range(28).map(bootstrap)
   var battery_t    = 0;
@@ -49,11 +54,14 @@ $(function() {
     }
 
     //update temperature data chart
-    temp_data.shift();
-    var new_data = {time: temp_t+=1, value: readings.temp};
-    console.log(new_data);
-    temp_data.push(new_data);
-    temp_chart.redraw(temp_data);
+    if(window.temp_chart) {
+      var time = new Date();
+      if(readings.time) time = new Date(readings.time);
+      val = parseFloat(readings.temp)
+      console.log(time, val)
+      console.log(readings)
+      window.temp_chart.series[0].addPoint({x:time, y:val}, true, true);
+    }
 
     //update battery data chart
     battery_data.shift();
@@ -151,3 +159,44 @@ function chart(selector, data) {
   return chart;
 }
 
+
+function makeTempChart(seed_data) {
+console.log(seed_data)
+  window.temp_chart = new Highcharts.Chart({
+    chart: {
+      renderTo: 'tempchart',
+      type: 'spline',
+      marginRight: 10,
+      events: {},
+    },
+    title: {
+      text: 'Temperature Readings'
+    },
+    xAxis: {
+      type: 'datetime',
+    },
+    yAxis: {
+      title: {
+        text: 'Temp'
+      },
+      plotLines: [{
+        value: 0,
+        width: 1,
+        color: '#808080'
+      }]
+    },
+    tooltip: {
+      formatter: function() {
+        return '<b>'+ this.series.name +'</b><br/>'+
+        Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) +'<br/>'+
+        Highcharts.numberFormat(this.y, 2);
+      }
+    },
+    legend: { enabled: false },
+    exporting: { enabled: false },
+    series: [{
+      name: "Temperature",
+      data: seed_data
+    }]
+  });
+}
