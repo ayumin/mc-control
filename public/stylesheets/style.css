@@ -41,3 +41,10 @@ dl dd code { max-width: 320px; overflow: scroll}
 #body-content {
   margin-top: 50px;
 }
+
+#map { 
+  border: 1px #ccc solid;
+  width: 820px;
+  height: 600px;
+  margin-top: 10px;
+}

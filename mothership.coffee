@@ -23,6 +23,9 @@ app.get "/sensor/:id", (req, res) ->
     title: "Machine Cloud Control Center"
     device_id: req.param("id")
 
+app.get "/analytics", (req, res) ->
+  res.render "analytics", title:"Machine Cloud Control Center"
+
 # History API
 app.get "/sensor/:id/history/hour", tempo.history
 
