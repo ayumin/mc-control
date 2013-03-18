@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+#
+# set_temp <device_id> <temp>
+
+curl http://device-mothership.herokuapp.com/sensor/$1/set/temp/$2
