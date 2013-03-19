@@ -7,7 +7,7 @@ $(function() {
     zoom: 6,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     panControl: false,
-    zoomControl: false,
+    zoomControl: true,
     streetViewControl: false
   });
 
@@ -49,6 +49,13 @@ $(function() {
   socket.on('mothership-readings', function(readings) {
     $('#device-count').text(readings.connections)
     console.log("Devices: " + readings.connections)
+
+    if(readings.connections == 0){
+      $.each(markers, function(){
+        this.setMap(null);
+        delete this;
+      })
+    }
   })
 
   socket.on('add-device', function(device, readings) {
