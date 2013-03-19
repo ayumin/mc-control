@@ -45,7 +45,11 @@ $(function() {
         var marker = new google.maps.Marker({
           position: loc,
           map: map,
-          title: 'Device ' + device
+          title: 'Device ' + device,
+          url: '/sensor/' + device
+        });
+        google.maps.event.addListener(marker, 'click', function() {
+          window.location.href = marker.url;
         });
         markers[device] = marker;
       }
