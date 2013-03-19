@@ -25,6 +25,8 @@ exports.configure = function(app, io) {
     if(process.env.FORCE_XHR_POLLING){
       io.set("transports", ["xhr-polling"]);
       io.set("polling duration", 10);
+    }else{
+      io.set('transports', ['websocket']);
     }
 
     io.enable('browser client minification');  // send minified client
