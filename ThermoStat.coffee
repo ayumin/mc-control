@@ -34,6 +34,8 @@ exports.ThermoStat = class ThermoStat
     @socket.on 'connect', () =>
       @socket.emit('register-device', @id)
 
+    @socket.on 'error', (err) -> console.log(err)
+
     @socket.on 'control-device', (settings) =>
       console.log('control-message: ', settings)
       if(settings.init)
