@@ -28,7 +28,6 @@ exports.ThermoStat = class ThermoStat
 
   connect: () ->
     @socket = io.connect(api_url,
-      'force new connection': true,
       'connect timeout': 30 * 1000,
       'try multiple transports': false)
     @socket.on 'connect', () =>
