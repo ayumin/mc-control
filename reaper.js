@@ -1,7 +1,7 @@
 var config = require('./configure');
 var redis = config.createRedisClient()
 
-var reaper_seconds = 10;
+var reaper_seconds = 2;
 
 //shared
 function time() { return (new Date()).getTime() }

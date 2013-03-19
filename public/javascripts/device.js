@@ -69,15 +69,15 @@ $(function() {
       var time = new Date();
       if(readings.time) time = new Date(readings.time);
       val = parseFloat(readings.temp)
-      console.log(time, val)
-      console.log(readings)
+      //console.log(time, val)
+      //console.log(readings)
       window.temp_chart.series[0].addPoint({x:time, y:val}, true, true);
     }
 
     //update battery data chart
     battery_data.shift();
     var new_data = {time: battery_t+=1, value: readings.battery};
-    console.log(new_data);
+    //console.log(new_data);
     battery_data.push(new_data);
     battery_chart.redraw(battery_data);
   })
