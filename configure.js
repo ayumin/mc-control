@@ -37,6 +37,8 @@ exports.configure = function(app, io) {
 
   //redis pub/sub
   io.configure(function() {
+    io.set('heartbeat interval', 10)
+
     if(! process.env.SINGLE_DYNO_MODE ) {
       var RedisStore = require('socket.io/lib/stores/redis');
       io.set('store', new RedisStore({
