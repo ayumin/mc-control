@@ -130,6 +130,7 @@ io.sockets.on "connection", (socket) ->
     socket.get "device-id", (err, id) ->
       redis.zrem "devices", id
       redis.del(device_key(id))
+      redis.hdel "device:locations", id
       console.log "device-disconnect=" + id
 
 mothershipReadings = ->
