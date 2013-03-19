@@ -127,9 +127,6 @@ io.sockets.on "connection", (socket) ->
       for client in io.sockets.clients(readings.device_id)
         client.emit "readings", readings unless client is socket
 
-      # ack on the socket
-      socket.emit 'ack', 'OK'
-
       #check for control response
       if message = control_readings(readings)
         io.sockets.in(readings.device_id).emit('control-device', message)
