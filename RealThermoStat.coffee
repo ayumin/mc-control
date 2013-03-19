@@ -3,7 +3,7 @@ thermostat = require('./ThermoStat')
 five = require("johnny-five")
 
 LED_PIN = 13
-TEMP_SENSOR_PIN = 8
+TEMP_SENSOR_PIN = 'A0' 
 TEMP_RATE = parseInt(process.env.TEMP_RATE || 1)
 
 exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
@@ -43,7 +43,7 @@ exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
   # start the timers
   start: () ->
     super()
-    @start_real_temp_sample()
+    @start_sample()
 
   # stop the timers
   stop: () ->
@@ -51,11 +51,12 @@ exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
     clearInterval(@real_sample)
 
   # vary the temperature
-  start_temp_walk: () ->
+  start_sample: () ->
     # default: (2hrs/36readings)*(sec/hr)*(millis/sec)
     sample = () =>
-      @temp = @temp_sensor.value * 0.004882814;
-      @temp     = (temp - 0.5) * 100;
+      if @temp_sensor
+        @temp = @temp_sensor.value * 0.004882814;
+        @temp = (@temp - 0.5) * 100;
     @real_sample = setInterval(sample, TEMP_RATE * 1000)
 
 (new exports.RealThermoStat).start()
