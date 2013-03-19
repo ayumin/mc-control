@@ -25,7 +25,9 @@ exports.ThermoStat = class ThermoStat
     clearInterval(@reporter)
 
   connect: () ->
-    @socket = io.connect(api_url, 'force new connection': true)
+    @socket = io.connect(api_url,
+      'force new connection': true,
+      'try multiple transports': false)
     @socket.on 'connect', () =>
       @socket.emit('register-device', @id)
 
