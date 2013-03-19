@@ -45,7 +45,10 @@ the device.
     reset - reset the redis database
     set_temp <device_id> <temp> - set the temp of a specific device
     update_config - update the app with the TEMPODB creds from l2temp
+    warm <start_dynos> <stop_dynos> <delay> - scale the sensor dynos from
+      start to stop with a sleep of delay, defaults from 0 to 100 sleeping 60s
     web - run the web server on PORT
+
 
 
 
