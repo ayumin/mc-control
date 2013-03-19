@@ -15,15 +15,30 @@ exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
     @lat  = @jitter_location(37.774929)
     @long = @jitter_location(-122.419416)
 
+  safe_keys: () -> 
+    keys = super
+    keys.push 'city'
+    keys.push 'country'
+    keys.push 'lat'
+    keys.push 'long'
+    keys
+
   init: () ->
     super
     @board = new five.Board()
     @init_board()
     @temp = 0
+    @last = {}
 
   jitter_location: (location) ->
     location += ((Math.random() * 0.1) - 0.05)
     parseFloat(location.toFixed(4))
+
+  process_readings: (readings) ->
+    if @led
+      @led.on()  if readings.status == 'FAIL'
+      @led.off() if @last.status == 'FAIL' and readings.status == 'OK'
+    @last = readings
 
   take_readings: () ->
     readings = super
@@ -31,6 +46,7 @@ exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
     readings.country = @country
     readings.lat = @lat
     readings.long = @long
+    @process_readings(readings)
     readings
 
   init_board: () ->
@@ -40,11 +56,9 @@ exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
         pin: TEMP_SENSOR_PIN
         freq: TEMP_RATE * 1000
 
-    @socket.on 'control-device', (settings) =>
-      console.log('control-device', settings)
-      @led.on() if settings.led.match(/on/i)
-      @led.on() if settings.led.match(/off/i)
-      @init() if settings.init
+    @socket.on 'control-device', (settings) => 
+      @led.on()  if settings.led?.match(/on/i)
+      @led.off() if settings.led?.match(/off/i)
 
   # start the timers
   start: () ->

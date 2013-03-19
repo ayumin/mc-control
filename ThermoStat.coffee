@@ -11,10 +11,12 @@ exports.ThermoStat = class ThermoStat
     @battery = 100
     @status = 'OK'
 
+  safe_keys: () -> ['battery', 'status', 'temp']
+
   # start the timers
   start: () ->
-    @init()
     @connect()
+    @init()
     @start_battery_drain()
     @start_reporter()
 
@@ -37,8 +39,8 @@ exports.ThermoStat = class ThermoStat
       if(settings.init)
         @init()
       else
-        for key, value of settings
-          this[key] = value
+        for key in @safe_keys()
+          this[key] = settings[key] if settings[key]
 
   fail: () -> @status = 'FAIL'
   ok:   () -> @status =  'OK'
