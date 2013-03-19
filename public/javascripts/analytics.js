@@ -34,14 +34,14 @@ $(function() {
       if (known_devices.indexOf(device) != -1)
         return;
 
-      var parts = readings.locations[device].split(',');
-      var loc = new google.maps.LatLng(parseFloat(parts[0]), parseFloat(parts[1]));
-      var marker = new google.maps.Marker({
-        position: loc,
-        map: map,
-        title: 'Device ' + device
-      });
-      markers[device] = marker;
+      // var parts = readings.locations[device].split(',');
+      // var loc = new google.maps.LatLng(parseFloat(parts[0]), parseFloat(parts[1]));
+      // var marker = new google.maps.Marker({
+      //   position: loc,
+      //   map: map,
+      //   title: 'Device ' + device
+      // });
+      // markers[device] = marker;
 
       known_devices.push(device);
     });
@@ -52,8 +52,8 @@ $(function() {
 
     $(gone).each(function() {
       var device = this.toString();
-      markers[device].setMap(null);
-      delete markers[device];
+      // markers[device].setMap(null);
+      // delete markers[device];
       known_devices.splice(known_devices.indexOf(device), 1);
     });
   });
