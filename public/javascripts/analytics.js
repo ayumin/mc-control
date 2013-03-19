@@ -39,8 +39,10 @@ $(function() {
     locations     = data.locations
 
     $.each(data.devices, function() {
-      var parts = locations[this].split(',');
-      add_to_map(this, parts[0], parts[1])
+      if(locations[this]){
+        var parts = locations[this].split(',');
+        add_to_map(this, parts[0], parts[1])
+      }
     })
   })
 
