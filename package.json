@@ -6,7 +6,7 @@
       "express": "2.4.x"
     , "jade": ">= 0.0.1"
     , "coffee-script": "*"
-    , "socket.io": "*"
+    , "socket.io": "0.9.0"
     , "socket.io-client": "*"
     , "superagent": "*"
     , "redis" : "*"
