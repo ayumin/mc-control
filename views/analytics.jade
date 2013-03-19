@@ -4,12 +4,17 @@ style
 h1 Analytics Dashboard
 
 .row
-  #map.span9
-
   #stats.span2
 
     dl.dl-horizontal
       dt Device Count
       dd#device-count
+
+      dt Readings / Sec
+      dd#throughput
+
+  .span1
+
+  #map.span8
 
 script(type='text/javascript', src='/javascripts/analytics.js')

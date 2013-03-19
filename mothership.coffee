@@ -8,6 +8,7 @@ tempo = require("./tempo")
 moment = require('moment')
 
 connection_expiry_seconds = parseInt(process.env.CONNECTION_EXPIRY || "30")
+mothership_interval       = parseInt(process.env.MOTHERSHIP_INTERVAL || 5)
 
 time = -> (new Date()).getTime()
 
@@ -110,6 +111,7 @@ io.sockets.on "connection", (socket) ->
   socket.on "readings", (readings) ->
     device = readings.device_id
     if device
+      redis.incr 'readings-count'
       refresh_device_connection device
       last_readings readings, (last) ->
         #console.log("LAST", last, readings)
@@ -143,10 +145,13 @@ io.sockets.on "connection", (socket) ->
 mothershipReadings = ->
   readings = {}
   redis.zcard "devices", (err, connections) ->
-    readings.connections = connections
-    io.sockets.in('mothership').emit('mothership-readings', readings)
+    redis.get 'readings-count', (err, count) ->
+      readings.throughput  = (count / mothership_interval)
+      readings.connections = connections
+      io.sockets.in('mothership').emit('mothership-readings', readings)
+      redis.set 'readings-count', 0
 
-setInterval mothershipReadings, parseInt(process.env.MOTHERSHIP_INTERVAL || 5) * 1000
+setInterval mothershipReadings, mothership_interval * 1000
 
 app.listen process.env.PORT or 3000, ->
   console.log "Express server listening on port %d in %s mode", app.address().port, app.settings.env
