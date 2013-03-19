@@ -4,7 +4,7 @@ five = require("johnny-five")
 
 LED_PIN = 13
 TEMP_SENSOR_PIN = 8
-TEMP_RATE = (process.env.TEMP_RATE || 4)
+TEMP_RATE = parseInt(process.env.TEMP_RATE || 1)
 
 exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
 
@@ -40,9 +40,23 @@ exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
         pin: TEMP_SENSOR_PIN
         freq: TEMP_RATE * 1000
 
-      device = this
-      @temp_sensor.scale([0,100]).on 'read', () =>
-        device.temp = @normalized
+  # start the timers
+  start: () ->
+    super()
+    @start_real_temp_sample()
+
+  # stop the timers
+  stop: () ->
+    super()
+    clearInterval(@real_sample)
+
+  # vary the temperature
+  start_temp_walk: () ->
+    # default: (2hrs/36readings)*(sec/hr)*(millis/sec)
+    sample = () =>
+      @temp = @temp_sensor.value * 0.004882814;
+      @temp     = (temp - 0.5) * 100;
+    @real_sample = setInterval(sample, TEMP_RATE * 1000)
 
 (new exports.RealThermoStat).start()
 
