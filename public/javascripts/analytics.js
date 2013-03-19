@@ -1,3 +1,5 @@
+DEBUG=false
+
 $(function() {
 
   var map = new google.maps.Map(document.getElementById('map'), {
@@ -11,64 +13,54 @@ $(function() {
 
   var socket = io.connect();
 
-  socket.on('connect', function(){
-    socket.emit('listen-mothership');
-  });
+  socket.on('connect', function(){ socket.emit('listen-mothership') });
 
   var known_devices = [];
   var markers = {};
+  var locations = {};
+
+  function add_to_map(device, lat, _long) {
+    var loc = new google.maps.LatLng(parseFloat(lat), parseFloat(_long));
+    var marker = new google.maps.Marker({
+      position: loc,
+      map: map,
+      title: 'Device ' + device,
+      url: '/sensor/' + device
+    });
+    google.maps.event.addListener(marker, 'click', function() {
+      window.location.href = marker.url;
+    });
+    markers[device] = marker;
+  }
+
+  socket.on('mothership-init', function(data) {
+    if(DEBUG) console.log('mothership-init', data)
+    known_devices = data.devices
+    locations     = data.locations
+
+    $.each(data.devices, function() {
+      var parts = locations[this].split(',');
+      add_to_map(this, parts[0], parts[1])
+    })
+  })
 
   socket.on('mothership-readings', function(readings) {
     $('#device-count').text(readings.connections)
+    console.log("Devices: " + readings.connections)
+  })
 
-    var current_devices = [];
+  socket.on('add-device', function(device, readings) {
+    if(DEBUG) console.log('add-device', device, readings)
+    add_to_map(device, readings.lat, readings.long)
+    known_devices.push(device)
+  })
 
-    $(readings.devices).each(function() {
-      var device = this.toString();
-
-      if (!readings.locations || !readings.locations[device])
-        return;
-
-      current_devices.push(device);
-
-      if (known_devices.indexOf(device) != -1)
-        return;
-
-      var hash = 0;
-      for (var i=0; i<device.length; i++) {
-        hash += device.charCodeAt(i);
-      }
-
-      if ((hash % 5) == 0) {
-        var parts = readings.locations[device].split(',');
-        var loc = new google.maps.LatLng(parseFloat(parts[0]), parseFloat(parts[1]));
-        var marker = new google.maps.Marker({
-          position: loc,
-          map: map,
-          title: 'Device ' + device,
-          url: '/sensor/' + device
-        });
-        google.maps.event.addListener(marker, 'click', function() {
-          window.location.href = marker.url;
-        });
-        markers[device] = marker;
-      }
-
-      known_devices.push(device);
-    });
-
-    var gone = known_devices.filter(function(item) {
-      return(current_devices.indexOf(item) == -1);
-    });
-
-    $(gone).each(function() {
-      var device = this.toString();
-      if (markers[device]) {
-        markers[device].setMap(null);
-        delete markers[device];
-      }
-      known_devices.splice(known_devices.indexOf(device), 1);
-    });
-  });
-
+  socket.on('remove-device', function(device) {
+    if(DEBUG) console.log('remove-device', device)
+    if (markers[device]) {
+      markers[device].setMap(null);
+      delete markers[device];
+    }
+    known_devices.splice(known_devices.indexOf(device), 1);
+  })
 });

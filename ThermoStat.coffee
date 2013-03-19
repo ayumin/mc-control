@@ -32,7 +32,7 @@ exports.ThermoStat = class ThermoStat
       'connect timeout': 30 * 1000,
       'try multiple transports': false)
     @socket.on 'connect', () =>
-      @socket.emit('register-device', @id)
+      @socket.emit 'register-device', @id, @take_readings()
 
     @socket.on 'error', (err) -> console.log(err)
 
