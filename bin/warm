@@ -1,0 +1,24 @@
+#! /usr/bin/env bash
+
+if [ "$1" = "" ]
+then
+  export 1='0'
+fi
+
+if [ "$2" = "" ]
+then
+  export 2='100'
+fi
+
+if [ "$3" = "" ]
+then
+  export 3='60'
+fi
+
+for i in `seq $1 $2`
+do
+  say "scale to $i"
+  heroku scale uuid_sensor=$i -a mc-control
+  echo "sleep $3"
+  sleep $3
+done
