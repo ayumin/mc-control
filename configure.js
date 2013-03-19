@@ -50,9 +50,11 @@ exports.configure = function(app, io) {
 exports.createRedisClient = function(){
   var redis_client = null;
 
+  var redis_url = process.env.REDISGREEN_URL || process.env.REDISTOGO_URL;
+
   //Setup Redis
-  if (process.env.REDISTOGO_URL) {
-    var rtg   = require("url").parse(process.env.REDISTOGO_URL);
+  if (redis_url) {
+    var rtg   = require("url").parse(redis_url);
     redis_client = redis.createClient(rtg.port, rtg.hostname);
     var redis_password = rtg.auth.split(":")[1]
   } else {
