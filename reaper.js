@@ -14,7 +14,7 @@ setInterval(prune_devices, (reaper_seconds * 1000));
 
 set_throughput = function(){
   redis.get('readings-count', function(err, count){
-    redis.set('readings-throughput', count / reaper_seconds * 1000, function(error, count){
+    redis.set('readings-throughput', count / reaper_seconds, function(error, count){
       redis.set('readings-count', 0)
     })
   })
