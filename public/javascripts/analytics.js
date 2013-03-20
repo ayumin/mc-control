@@ -62,8 +62,8 @@ $(function() {
     if(readings.connections == 0){
       $.each(markers, function(){
         this.setMap(null);
-        delete this;
       })
+      markers.length = 0;
     }
   })
 
