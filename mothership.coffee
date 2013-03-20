@@ -145,11 +145,10 @@ io.sockets.on "connection", (socket) ->
 mothershipReadings = ->
   readings = {}
   redis.zcard "devices", (err, connections) ->
-    redis.get 'readings-count', (err, count) ->
-      readings.throughput  = (count / mothership_interval)
+    redis.get 'readings-throughput', (err, count) ->
+      readings.throughput  = count
       readings.connections = connections
       io.sockets.in('mothership').emit('mothership-readings', readings)
-      redis.set 'readings-count', 0
 
 setInterval mothershipReadings, mothership_interval * 1000
 
