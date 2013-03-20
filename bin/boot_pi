@@ -1,0 +1,6 @@
+#! /usr/bin/env bash
+
+ssh pi@192.168.2.8 <<'ENDSSH'
+cd mc-control
+./bin/real_device
+ENDSSH

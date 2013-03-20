@@ -8,6 +8,7 @@ tempo = require("./tempo")
 moment = require('moment')
 
 connection_expiry_seconds = parseInt(process.env.CONNECTION_EXPIRY || "30")
+mothership_interval       = parseInt(process.env.MOTHERSHIP_INTERVAL || 5)
 
 time = -> (new Date()).getTime()
 
@@ -82,6 +83,7 @@ last_readings = (readings, callback) ->
     location[readings.device_id] = "#{readings.lat},#{readings.long}"
     redis.hmset "device:locations", location
 
+
 # Setup WebSockets
 io.sockets.on "connection", (socket) ->
   socket.on "listen-device", (device_id) ->
@@ -89,18 +91,27 @@ io.sockets.on "connection", (socket) ->
     socket.join device_id
     console.log "listen-device", device_id
 
-  socket.on "listen-mothership", -> socket.join "mothership"
+  socket.on "listen-mothership", ->
+    socket.join "mothership"
+    init_packet = {}
+    redis.zrange "devices", 0, -1, (error, devices) ->
+      init_packet.devices = devices or []
+      redis.hgetall "device:locations", (err, locations) ->
+        init_packet.locations = locations
+        socket.emit 'mothership-init', init_packet
 
-  socket.on "register-device", (device_id) ->
+  socket.on "register-device", (device_id, readings) ->
     socket.set "device-id", device_id, ->
       socket.join device_id
       refresh_device_connection device_id
+      io.sockets.in('mothership').emit('add-device', device_id, readings)
       console.log "register-device", device_id
 
   #Sensor Reporting API
   socket.on "readings", (readings) ->
     device = readings.device_id
     if device
+      redis.incr 'readings-count'
       refresh_device_connection device
       last_readings readings, (last) ->
         #console.log("LAST", last, readings)
@@ -118,9 +129,6 @@ io.sockets.on "connection", (socket) ->
       for client in io.sockets.clients(readings.device_id)
         client.emit "readings", readings unless client is socket
 
-      # ack on the socket
-      socket.emit 'ack', 'OK'
-
       #check for control response
       if message = control_readings(readings)
         io.sockets.in(readings.device_id).emit('control-device', message)
@@ -128,21 +136,21 @@ io.sockets.on "connection", (socket) ->
   socket.on "disconnect", ->
     #cleanup when a device disconnects
     socket.get "device-id", (err, id) ->
+      io.sockets.in('mothership').emit('remove-device', id)
       redis.zrem "devices", id
       redis.del(device_key(id))
+      redis.hdel "device:locations", id
       console.log "device-disconnect=" + id
 
 mothershipReadings = ->
   readings = {}
-  redis.zrange "devices", 0, -1, (error, devices) ->
-    devices = devices or []
-    redis.hgetall "device:locations", (err, locations) ->
-      readings.connections = devices.length
-      readings.devices = devices
-      readings.locations = locations
+  redis.zcard "devices", (err, connections) ->
+    redis.get 'readings-throughput', (err, count) ->
+      readings.throughput  = count
+      readings.connections = connections
       io.sockets.in('mothership').emit('mothership-readings', readings)
 
-setInterval mothershipReadings, parseInt(process.env.MOTHERSHIP_INTERVAL || 5) * 1000
+setInterval mothershipReadings, mothership_interval * 1000
 
 app.listen process.env.PORT or 3000, ->
   console.log "Express server listening on port %d in %s mode", app.address().port, app.settings.env

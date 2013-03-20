@@ -1,15 +1,16 @@
 style
   .chart rect { fill: steelblue; stroke: white; }
 
-h1 Analytics Dashboard
+.row#metrics
+  .metric
+    .name Devices Connected
+    .value#device-count --
+  .metric
+    .name Readings/sec
+    .value#throughput --
 
-.row
-  #map.span9
+h2 Analytics Dashboard
 
-  #stats.span2
-
-    dl.dl-horizontal
-      dt Device Count
-      dd#device-count
+#map
 
 script(type='text/javascript', src='/javascripts/analytics.js')

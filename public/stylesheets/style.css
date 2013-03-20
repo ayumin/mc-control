@@ -44,9 +44,9 @@ dl dd code { max-width: 320px; overflow: scroll}
 
 #map { 
   border: 1px #ccc solid;
-  width: 820px;
-  height: 600px;
-  margin-top: 10px;
+  width: 878px;
+  height: 450px;
+  margin-top: 14px;
 }
 
 #tempchart {
@@ -59,4 +59,27 @@ dl dd code { max-width: 320px; overflow: scroll}
   font-size: 1.2em;
   padding-top: 0;
   line-height: 20px;
+}
+
+#metrics {
+  width: 600px;
+  float: right;
+  margin-right: 230px;
+}
+
+.metric {
+  float: right;
+  font-size: 1.1em;
+  margin-top: 22px;
+  margin-right: 60px;
+}
+
+.metric .name {
+  float: left;
+  margin-right: 10px;
+}
+
+.metric .value {
+  float: left;
+  font-weight: bold;
 }

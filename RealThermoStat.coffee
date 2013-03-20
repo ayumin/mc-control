@@ -14,8 +14,9 @@ exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
     @country = 'USA'
     @lat  = @jitter_location(37.774929)
     @long = @jitter_location(-122.419416)
+    @board = new five.Board()
 
-  safe_keys: () -> 
+  safe_keys: () ->
     keys = super
     keys.push 'city'
     keys.push 'country'
@@ -25,8 +26,6 @@ exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
 
   init: () ->
     super
-    @board = new five.Board()
-    @init_board()
     @temp = 0
     @last = {}
 
@@ -56,13 +55,14 @@ exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
         pin: TEMP_SENSOR_PIN
         freq: TEMP_RATE * 1000
 
-    @socket.on 'control-device', (settings) => 
+    @socket.on 'control-device', (settings) =>
       @led.on()  if settings.led?.match(/on/i)
       @led.off() if settings.led?.match(/off/i)
 
   # start the timers
   start: () ->
     super()
+    @init_board()
     @start_sample()
 
   # stop the timers

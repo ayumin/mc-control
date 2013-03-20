@@ -26,13 +26,20 @@ exports.ThermoStat = class ThermoStat
     clearInterval(@walk)
     clearInterval(@reporter)
 
-  connect: () ->
-    @socket = io.connect(api_url,
-      'force new connection': true,
+  connection_settings: () ->
+    settings =
       'connect timeout': 30 * 1000,
-      'try multiple transports': false)
+      'try multiple transports': false
+    if process.env.FORCE_NEW_CONNECTION
+      settings['force new connection'] = true
+    settings
+
+  connect: () ->
+    @socket = io.connect api_url, @connection_settings()
     @socket.on 'connect', () =>
-      @socket.emit('register-device', @id)
+      @socket.emit 'register-device', @id, @take_readings()
+
+    @socket.on 'error', (err) -> console.log(err)
 
     @socket.on 'control-device', (settings) =>
       console.log('control-message: ', settings)

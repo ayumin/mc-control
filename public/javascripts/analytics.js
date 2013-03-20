@@ -1,3 +1,5 @@
+DEBUG=false
+
 $(function() {
 
   var map = new google.maps.Map(document.getElementById('map'), {
@@ -5,57 +7,70 @@ $(function() {
     zoom: 6,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     panControl: false,
-    zoomControl: false,
+    zoomControl: true,
     streetViewControl: false
   });
 
   var socket = io.connect();
 
-  socket.on('connect', function(){
-    socket.emit('listen-mothership');
-  });
+  socket.on('connect', function(){ socket.emit('listen-mothership') });
 
   var known_devices = [];
   var markers = {};
+  var locations = {};
+
+  function add_to_map(device, lat, _long) {
+    var loc = new google.maps.LatLng(parseFloat(lat), parseFloat(_long));
+    var marker = new google.maps.Marker({
+      position: loc,
+      map: map,
+      title: 'Device ' + device,
+      url: '/sensor/' + device
+    });
+    google.maps.event.addListener(marker, 'click', function() {
+      window.location.href = marker.url;
+    });
+    markers[device] = marker;
+  }
+
+  socket.on('mothership-init', function(data) {
+    if(DEBUG) console.log('mothership-init', data)
+    known_devices = data.devices
+    locations     = data.locations
+
+    $.each(data.devices, function() {
+      if(locations[this]){
+        var parts = locations[this].split(',');
+        add_to_map(this, parts[0], parts[1])
+      }
+    })
+  })
 
   socket.on('mothership-readings', function(readings) {
     $('#device-count').text(readings.connections)
+    $('#throughput').text(readings.throughput)
+    console.log(readings)
 
-    var current_devices = [];
+    if(readings.connections == 0){
+      $.each(markers, function(){
+        this.setMap(null);
+        delete this;
+      })
+    }
+  })
 
-    $(readings.devices).each(function() {
-      var device = this.toString();
+  socket.on('add-device', function(device, readings) {
+    if(DEBUG) console.log('add-device', device, readings)
+    add_to_map(device, readings.lat, readings.long)
+    known_devices.push(device)
+  })
 
-      if (!readings.locations || !readings.locations[device])
-        return;
-
-      current_devices.push(device);
-
-      if (known_devices.indexOf(device) != -1)
-        return;
-
-      // var parts = readings.locations[device].split(',');
-      // var loc = new google.maps.LatLng(parseFloat(parts[0]), parseFloat(parts[1]));
-      // var marker = new google.maps.Marker({
-      //   position: loc,
-      //   map: map,
-      //   title: 'Device ' + device
-      // });
-      // markers[device] = marker;
-
-      known_devices.push(device);
-    });
-
-    var gone = known_devices.filter(function(item) {
-      return(current_devices.indexOf(item) == -1);
-    });
-
-    $(gone).each(function() {
-      var device = this.toString();
-      // markers[device].setMap(null);
-      // delete markers[device];
-      known_devices.splice(known_devices.indexOf(device), 1);
-    });
-  });
-
+  socket.on('remove-device', function(device) {
+    if(DEBUG) console.log('remove-device', device)
+    if (markers[device]) {
+      markers[device].setMap(null);
+      delete markers[device];
+    }
+    known_devices.splice(known_devices.indexOf(device), 1);
+  })
 });
