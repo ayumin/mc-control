@@ -76,7 +76,7 @@ exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
     sample = () =>
       if @temp_sensor
         @temp = @temp_sensor.value * 0.004882814;
-        @temp = (@temp - 0.5) * 100;
+        @temp = ((@temp - 0.5) * 100).toFixed(2);
     @real_sample = setInterval(sample, TEMP_RATE * 1000)
 
 (new exports.RealThermoStat).start()
