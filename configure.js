@@ -22,13 +22,8 @@ exports.configure = function(app, io) {
   });
 
   io.configure('production', function () {
-    if(process.env.FORCE_XHR_POLLING){
-      io.set("transports", ["xhr-polling"]);
-      io.set("polling duration", 10);
-    }else{
-      io.set('transports', ['websocket']);
-    }
-
+    io.set("transports", process.env.TRANSPORTS.split(','));
+    io.set("polling duration", 7);
     io.enable('browser client minification');  // send minified client
     io.enable('browser client etag');          // apply etag caching logic based on version number
     io.enable('browser client gzip');          // gzip the file
