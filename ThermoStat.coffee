@@ -28,9 +28,10 @@ exports.ThermoStat = class ThermoStat
 
   connection_settings: () ->
     settings =
-      'connect timeout': 10 * 1000,
+      'connect timeout': 5 * 1000,
       'try multiple transports': false
       'reconnection delay': 50
+      'max reconnection attempts': 1000
     if process.env.FORCE_NEW_CONNECTION
       settings['force new connection'] = true
     settings
@@ -41,6 +42,10 @@ exports.ThermoStat = class ThermoStat
       @socket.emit 'register-device', @id, @take_readings()
 
     @socket.on 'error', (err) -> console.log(err)
+
+    @socket.on 'reconnect_failed', (err) ->
+      console.log('reconnect_failed=true')
+      console.log(err)
 
     @socket.on 'control-device', (settings) =>
       console.log('control-message: ', settings)
