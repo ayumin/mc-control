@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+
+git push
+git push heroku
+heroku slugs:copy mc-control mc-dashboard
