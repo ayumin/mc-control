@@ -33,10 +33,14 @@ $(function() {
       position: loc,
       map: map,
       title: 'Device ' + device,
-      url: '/sensor/' + device
+      url: '/sensor/' + device,
+      target: '_blank'
     });
     google.maps.event.addListener(marker, 'click', function() {
-      window.location.href = marker.url;
+      var infowindow = new google.maps.InfoWindow({
+        content: "<a href='" + marker.url + "'>" + marker.title + "</a>"
+      })
+      infowindow.open(map, marker)
     });
     markers[device] = marker;
   }
