@@ -28,7 +28,7 @@ exports.ThermoStat = class ThermoStat
 
   connection_settings: () ->
     settings =
-      'connect timeout': 5 * 1000,
+      'connect timeout': 10 * 1000,
       'try multiple transports': false
       'reconnection delay': 250
       'max reconnection attempts': 1000
