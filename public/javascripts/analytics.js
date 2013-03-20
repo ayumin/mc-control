@@ -2,6 +2,14 @@ DEBUG=false
 
 $(function() {
 
+  function format_number(number) {
+    if (number) {
+      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    } else {
+      return '--';
+    }
+  }
+
   var map = new google.maps.Map(document.getElementById('map'), {
     center: new google.maps.LatLng(36.893738, 136.502165),
     zoom: 6,
@@ -47,9 +55,9 @@ $(function() {
   })
 
   socket.on('mothership-readings', function(readings) {
-    $('#device-count').text(readings.connections)
-    $('#throughput').text(readings.throughput)
-    console.log(readings)
+    $('#device-count').text(format_number(readings.connections))
+    $('#throughput').text(format_number(readings.throughput))
+    if(DEBUG) console.log(readings)
 
     if(readings.connections == 0){
       $.each(markers, function(){
