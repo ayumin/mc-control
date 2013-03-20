@@ -44,7 +44,7 @@ dl dd code { max-width: 320px; overflow: scroll}
 
 #map { 
   border: 1px #ccc solid;
-  width: 820px;
+  width: 878px;
   height: 450px;
   margin-top: 14px;
 }
@@ -64,11 +64,11 @@ dl dd code { max-width: 320px; overflow: scroll}
 #metrics {
   width: 600px;
   float: right;
-  margin-right: 70px;
+  margin-right: 230px;
 }
 
 .metric {
-  float: left;
+  float: right;
   font-size: 1.1em;
   margin-top: 22px;
   margin-right: 60px;
