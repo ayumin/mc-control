@@ -187,7 +187,7 @@ console.log(seed_data)
       style: { display:'none' }
     },
     xAxis: {
-      type: 'datetime',
+      type: 'datetime'
     },
     yAxis: {
       title: {

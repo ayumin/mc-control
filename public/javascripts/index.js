@@ -17,10 +17,12 @@ $(function() {
     $devices.append($li)
   }
 
+/*
   socket.on('mothership-init', function(data) {
     if(DEBUG) console.log('mothership-init', data)
     $.each(data.devices.sort(), function(){ add_to_list(this) })
   })
+  */
 
   socket.on('mothership-readings', function(readings) {
     $('#num_devices').text(readings.connections)

@@ -93,12 +93,13 @@ io.sockets.on "connection", (socket) ->
 
   socket.on "listen-mothership", ->
     socket.join "mothership"
-    init_packet = {}
     redis.zrange "devices", 0, -1, (error, devices) ->
-      init_packet.devices = devices or []
       redis.hgetall "device:locations", (err, locations) ->
-        init_packet.locations = locations
-        socket.emit 'mothership-init', init_packet
+        for device in devices
+          location = locations[device]
+          socket.emit 'add-device', device ,
+            lat: location.lat
+            long: location.long
 
   socket.on "register-device", (device_id, readings) ->
     socket.set "device-id", device_id, ->

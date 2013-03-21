@@ -45,6 +45,7 @@ $(function() {
     markers[device] = marker;
   }
 
+  /*
   socket.on('mothership-init', function(data) {
     if(DEBUG) console.log('mothership-init', data)
     known_devices = data.devices
@@ -57,6 +58,7 @@ $(function() {
       }
     })
   })
+  */
 
   socket.on('mothership-readings', function(readings) {
     $('#device-count').text(format_number(readings.connections))
