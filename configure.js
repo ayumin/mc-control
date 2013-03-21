@@ -15,6 +15,7 @@ exports.configure = function(app, io) {
   app.configure('development', function(){
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
     process.env.PORT = process.env.PORT || 3333;
+    io.set('log level', parseInt(process.env.SOCKETIO_LOG_LEVEL || 2));
   });
 
   app.configure('production', function(){
