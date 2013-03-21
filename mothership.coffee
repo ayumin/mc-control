@@ -96,7 +96,7 @@ io.sockets.on "connection", (socket) ->
     redis.zrange "devices", 0, -1, (error, devices) ->
       redis.hgetall "device:locations", (err, locations) ->
         for device in devices
-          location = locations[device]
+          location = locations[device] || {}
           socket.emit 'add-device', device ,
             lat: location.lat
             long: location.long

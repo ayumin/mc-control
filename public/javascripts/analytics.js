@@ -45,21 +45,6 @@ $(function() {
     markers[device] = marker;
   }
 
-  /*
-  socket.on('mothership-init', function(data) {
-    if(DEBUG) console.log('mothership-init', data)
-    known_devices = data.devices
-    locations     = data.locations
-
-    $.each(data.devices, function() {
-      if(locations[this]){
-        var parts = locations[this].split(',');
-        add_to_map(this, parts[0], parts[1])
-      }
-    })
-  })
-  */
-
   socket.on('mothership-readings', function(readings) {
     $('#device-count').text(format_number(readings.connections))
     $('#throughput').text(format_number(readings.throughput))
