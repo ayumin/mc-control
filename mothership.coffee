@@ -8,7 +8,6 @@ tempo = require("./tempo")
 moment = require('moment')
 
 connection_expiry_seconds = parseInt(process.env.CONNECTION_EXPIRY || "30")
-mothership_interval       = parseInt(process.env.MOTHERSHIP_INTERVAL || 5)
 
 time = -> (new Date()).getTime()
 
