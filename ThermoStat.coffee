@@ -10,6 +10,7 @@ exports.ThermoStat = class ThermoStat
   init: () ->
     @battery = 100
     @status = 'OK'
+    @temp = 0
 
   safe_keys: () -> ['battery', 'status', 'temp']
 
@@ -23,8 +24,8 @@ exports.ThermoStat = class ThermoStat
   # stop the timers
   stop: () ->
     clearInterval(@drain)
-    clearInterval(@walk)
     clearInterval(@reporter)
+    @socket.disconnect()
 
   connection_settings: () ->
     settings =
