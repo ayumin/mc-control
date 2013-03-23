@@ -75,14 +75,26 @@ refresh_device_connection = (device_id) ->
 device_key = (id) => "device:#{id}"
 
 last_readings = (readings, callback) ->
-  key = device_key(readings.device_id)
+  key = "last-reading:#{device_key(readings.device_id)}"
   redis.hgetall key, (err, result) ->
+    redis.hmset key, status: readings.status
     callback(result || {})
-    redis.hmset key, status:  readings.status
-    location = {}
-    location[readings.device_id] = "#{readings.lat},#{readings.long}"
-    redis.hmset "device:locations", location
 
+compare_with_last_readings = (readings) ->
+  last_readings readings, (last) ->
+    if last.status == 'OK' and readings.status == 'FAIL'
+      logline = "code=42 failure=true device_id=#{readings.device_id} "
+      logline += "lat=#{readings.lat} long=#{readings.long}"
+      console.log(logline)
+
+stream_devices_and_locations = (socket) ->
+  redis.zrange "devices", 0, -1, (error, devices) ->
+    redis.hgetall "device:locations", (err, locations) ->
+      for device in devices
+        location = locations[device] || {}
+        socket.emit 'add-device', device,
+          lat: location.lat
+          long: location.long
 
 # Setup WebSockets
 io.sockets.on "connection", (socket) ->
@@ -93,13 +105,7 @@ io.sockets.on "connection", (socket) ->
 
   socket.on "listen-mothership", ->
     socket.join "mothership"
-    redis.zrange "devices", 0, -1, (error, devices) ->
-      redis.hgetall "device:locations", (err, locations) ->
-        for device in devices
-          location = locations[device] || {}
-          socket.emit 'add-device', device ,
-            lat: location.lat
-            long: location.long
+    stream_devices_and_locations socket
 
   socket.on "register-device", (device_id, readings) ->
     socket.set "device-id", device_id, ->
@@ -114,25 +120,22 @@ io.sockets.on "connection", (socket) ->
     if device
       redis.incr 'readings-count'
       refresh_device_connection device
-      last_readings readings, (last) ->
-        #console.log("LAST", last, readings)
-        if last.status == 'OK' and readings.status == 'FAIL'
-          redis.hmget "device:locations", device, (err, location) ->
-            [lat, long] = (location || "").toString().split(",")
-            console.log("code=42 failure=true device_id=#{device} lat=#{lat} long=#{long}")
+      compare_with_last_readings readings
 
+      redis.hmset "device:locations", device, "#{readings.lat},#{readings.long}"
+
+      # log the readings
       readings.time = moment().format()
-
       logline = ("#{key}=#{value}" for key, value of readings).join(' ')
       console.log(logline + " readings=true")
 
       #broadcast to everyone in room besides this socket
-      for client in io.sockets.clients(readings.device_id)
+      for client in io.sockets.clients(device)
         client.emit "readings", readings unless client is socket
 
       #check for control response
       if message = control_readings(readings)
-        io.sockets.in(readings.device_id).emit('control-device', message)
+        io.sockets.in(device).emit('control-device', message)
 
   socket.on "disconnect", ->
     #cleanup when a device disconnects
