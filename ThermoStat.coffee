@@ -32,21 +32,29 @@ exports.ThermoStat = class ThermoStat
       'connect timeout': 10 * 1000,
       'try multiple transports': false
       'reconnection delay': 50
+      'backoff': 1
       'max reconnection attempts': 100000
     if process.env.FORCE_NEW_CONNECTION
       settings['force new connection'] = true
     settings
 
-  connect: () ->
+  hookup_errors: ->
+    @socket.on 'error', (err) ->
+      console.log('error=true')
+      console.log(err)
+
+    @socket.on 'connect_failed', (err) ->
+      console.log('connect_failed=true error=true')
+      console.log(err)
+
+    @socket.on 'reconnect_failed', (err) ->
+      console.log('reconnect_failed=true error=true')
+      console.log(err)
+
+  connect:  ->
     @socket = io.connect api_url, @connection_settings()
     @socket.on 'connect', () =>
       @socket.emit 'register-device', @id, @take_readings()
-
-    @socket.on 'error', (err) -> console.log(err)
-
-    @socket.on 'reconnect_failed', (err) ->
-      console.log('reconnect_failed=true')
-      console.log(err)
 
     @socket.on 'control-device', (settings) =>
       console.log('control-message: ', settings)
@@ -55,6 +63,8 @@ exports.ThermoStat = class ThermoStat
       else
         for key in @safe_keys()
           this[key] = settings[key] if settings[key]
+
+    @hookup_errors()
 
   fail: () -> @status = 'FAIL'
   ok:   () -> @status =  'OK'
