@@ -77,8 +77,12 @@ device_key = (id) => "device:#{id}"
 last_readings = (readings, callback) ->
   key = device_key(readings.device_id)
   redis.hgetall key, (err, result) ->
-    readings[key] = value.toString() for key, value of readings
-    redis.hmset key, readings
+    redis.hmset key,
+      status: readings.status
+      lat: readings.lat.toString()
+      long: readings.long.toString()
+      temp: readings.temp.toString()
+      battery: readings.battery.toString()
     callback(result || {})
 
 compare_with_last_readings = (readings) ->
