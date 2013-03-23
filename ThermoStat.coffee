@@ -40,13 +40,13 @@ exports.ThermoStat = class ThermoStat
 
   hookup_errors: ->
     @socket.on 'error', (err) ->
-      console.log('error=true')
-      console.log(err)
+      console.log('error=true', err)
+      @socket.disconnect()
       @socket.connect()
 
     @socket.on 'connect_failed', (err) ->
-      console.log('connect_failed=true error=true')
-      console.log(err)
+      console.log('connect_failed=true error=true', err)
+      @socket.disconnect()
       @socket.connect()
 
   connect:  ->
