@@ -77,17 +77,15 @@ device_key = (id) => "device:#{id}"
 last_readings = (readings, callback) ->
   key = device_key(readings.device_id)
   redis.hgetall key, (err, result) ->
-    redis.hmset key,
-      status: readings.status
-      lat: readings.lat.toString()
-      long: readings.long.toString()
+    readings[key] = value.toString() for key, value of readings
+    redis.hmset key, readings
     callback(result || {})
 
 compare_with_last_readings = (readings) ->
   last_readings readings, (last) ->
     if last.status != 'RECALL' and readings.status == 'RECALL'
-      redis.hget device_key(readings.device_id), 'push_url', (err, push_url) ->
-        logline = "recall=true device_id=#{readings.device_id} push_url=#{push_url}"
+      redis.hget device_key(readings.device_id), 'push_token', (err, push_token) ->
+        logline = "recall=true device_id=#{readings.device_id} push_token=#{push_token}"
         console.log(logline)
 
     if last.status == 'OK' and readings.status == 'FAIL'
@@ -113,7 +111,7 @@ io.sockets.on "connection", (socket) ->
 
   socket.on "listen-device-hash", (data) ->
     redis.del device_key(device_id), ->
-      redis.hset device_key(data.id), 'push_url', data.push_url
+      redis.hset device_key(data.id), 'push_token', data.push_token
     socket.join data.id
     console.log "listen-device", data.id
 
