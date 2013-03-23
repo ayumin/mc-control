@@ -35,8 +35,8 @@ exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
 
   process_readings: (readings) ->
     if @led
-      @led.on()  if readings.status == 'FAIL'
-      @led.off() if @last.status == 'FAIL' and readings.status == 'OK'
+      @led.on()  if readings.stauts != 'OK'
+      @led.off() if @last.status != 'OK' and readings.status == 'OK'
     @last = readings
 
   take_readings: () ->
