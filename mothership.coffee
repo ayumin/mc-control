@@ -75,7 +75,7 @@ refresh_device_connection = (device_id) ->
 device_key = (id) => "device:#{id}"
 
 last_readings = (readings, callback) ->
-  key = "last-reading:#{device_key(readings.device_id)}"
+  key = device_key(readings.device_id)
   redis.hgetall key, (err, result) ->
     redis.hmset key,
       status: readings.status
@@ -86,8 +86,9 @@ last_readings = (readings, callback) ->
 compare_with_last_readings = (readings) ->
   last_readings readings, (last) ->
     if last.status != 'RECALL' and readings.status == 'RECALL'
-      logline = "recall=true device_id=#{readings.device_id}"
-      console.log(logline)
+      redis.hget device_key(readings.device_id), 'push_url', (err, push_url) ->
+        logline = "recall=true device_id=#{readings.device_id} push_url=#{push_url}"
+        console.log(logline)
 
     if last.status == 'OK' and readings.status == 'FAIL'
       logline = "code=42 failure=true device_id=#{readings.device_id}"
@@ -97,7 +98,7 @@ compare_with_last_readings = (readings) ->
 stream_devices_and_locations = (socket) ->
   redis.zrange "devices", 0, -1, (error, devices) ->
     devices.map (device) ->
-      redis.hgetall "last-reading:#{device_key(device)}", (err, readings) ->
+      redis.hgetall device_key(device), (err, readings) ->
         readings ||= {}
         socket.emit 'add-device', device,
           lat: readings.lat
@@ -106,12 +107,13 @@ stream_devices_and_locations = (socket) ->
 # Setup WebSockets
 io.sockets.on "connection", (socket) ->
   socket.on "listen-device", (device_id) ->
-    redis.del(device_key(device_id))
+    redis.del device_key(device_id)
     socket.join device_id
     console.log "listen-device", device_id
 
   socket.on "listen-device-hash", (data) ->
-    redis.del(device_key(data.id))
+    redis.del device_key(device_id), ->
+      redis.hset device_key(data.id), 'push_url', data.push_url
     socket.join data.id
     console.log "listen-device", data.id
 
@@ -128,8 +130,7 @@ io.sockets.on "connection", (socket) ->
 
   #Sensor Reporting API
   socket.on "readings", (readings) ->
-    device = readings.device_id
-    if device
+    if device = readings.device_id
       redis.incr 'readings-count'
       refresh_device_connection device
       compare_with_last_readings readings
@@ -152,7 +153,7 @@ io.sockets.on "connection", (socket) ->
     socket.get "device-id", (err, id) ->
       io.sockets.in('mothership').emit('remove-device', id)
       redis.zrem "devices", id
-      redis.del(device_key(id))
+      redis.del device_key(id)
       console.log "device-disconnect=" + id
 
 mothershipReadings = ->
