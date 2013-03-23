@@ -19,3 +19,14 @@ set_throughput = ->
       console.log "throughput=#{throughput}"
       redis.set 'readings-count', 0
 setInterval set_throughput, throughput_interval
+
+# Send out Mothership readings
+mothershipReadings = ->
+  readings = {}
+  redis.zcard "devices", (err, connections) ->
+    redis.get 'readings-throughput', (err, count) ->
+      readings.throughput  = count
+      readings.connections = connections
+      io.sockets.in('mothership').emit('mothership-readings', readings)
+
+setInterval mothershipReadings, mothership_interval * 1000

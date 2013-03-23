@@ -160,15 +160,5 @@ io.sockets.on "connection", (socket) ->
       redis.del device_key(id)
       console.log "device-disconnect=" + id
 
-mothershipReadings = ->
-  readings = {}
-  redis.zcard "devices", (err, connections) ->
-    redis.get 'readings-throughput', (err, count) ->
-      readings.throughput  = count
-      readings.connections = connections
-      io.sockets.in('mothership').emit('mothership-readings', readings)
-
-setInterval mothershipReadings, mothership_interval * 1000
-
 app.listen process.env.PORT or 3000, ->
   console.log "Express server listening on port %d in %s mode", app.address().port, app.settings.env
