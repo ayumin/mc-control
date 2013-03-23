@@ -2,7 +2,7 @@ config = require './configure'
 http   = require("http")
 redis  = config.createRedisClient()
 
-readings_interval = parseInt(process.env.READINGS_INTERVAL || 5)
+readings_interval = parseInt(process.env.DASHBOARD_READINGS_INTERVAL || 5)
 now = -> (new Date()).getTime()
 
 # Prune Device List
