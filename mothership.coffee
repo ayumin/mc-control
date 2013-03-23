@@ -77,7 +77,10 @@ device_key = (id) => "device:#{id}"
 last_readings = (readings, callback) ->
   key = "last-reading:#{device_key(readings.device_id)}"
   redis.hgetall key, (err, result) ->
-    redis.hmset key, status: readings.status
+    redis.hmset key,
+      status: readings.status
+      lat: readings.lat.toString()
+      long: readings.long.toString()
     callback(result || {})
 
 compare_with_last_readings = (readings) ->
@@ -89,12 +92,12 @@ compare_with_last_readings = (readings) ->
 
 stream_devices_and_locations = (socket) ->
   redis.zrange "devices", 0, -1, (error, devices) ->
-    redis.hgetall "device:locations", (err, locations) ->
-      for device in devices
-        location = locations[device] || {}
+    devices.map (device) ->
+      redis.hgetall "last-reading:#{device_key(device)}", (err, readings) ->
+        readings ||= {}
         socket.emit 'add-device', device,
-          lat: location.lat
-          long: location.long
+          lat: readings.lat
+          long: readings.long
 
 # Setup WebSockets
 io.sockets.on "connection", (socket) ->
@@ -122,8 +125,6 @@ io.sockets.on "connection", (socket) ->
       refresh_device_connection device
       compare_with_last_readings readings
 
-      redis.hmset "device:locations", device, "#{readings.lat},#{readings.long}"
-
       # log the readings
       readings.time = moment().format()
       logline = ("#{key}=#{value}" for key, value of readings).join(' ')
@@ -143,7 +144,6 @@ io.sockets.on "connection", (socket) ->
       io.sockets.in('mothership').emit('remove-device', id)
       redis.zrem "devices", id
       redis.del(device_key(id))
-      redis.hdel "device:locations", id
       console.log "device-disconnect=" + id
 
 mothershipReadings = ->
