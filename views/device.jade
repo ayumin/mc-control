@@ -38,6 +38,16 @@ div#device(data-id= device_id)
         th Status
         td#status
 
+      tr
+        th Messages
+        td
+          form#send_to_device
+            label Key:
+            input(type='text', name='key')
+            label Value:
+            input(type='text', name='value')
+            br
+            button(type='button').btn.btn-primary Send
 
     #graphs.span6
 

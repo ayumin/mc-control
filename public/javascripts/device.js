@@ -4,6 +4,14 @@ String.prototype.capitalize = function() {
 
 $(function() {
 
+  $('#send_to_device button').click(function(){
+    var $key = $('#send_to_device input[name=key]')
+    var $value = $('#send_to_device input[name=value]')
+    $.get(window.location + "/set/" + $key.val() + "/" + $value.val())
+    $key.val('')
+    $value.val('')
+  })
+
   device_id  = function() {
     return $('#device').attr('data-id');
   }
