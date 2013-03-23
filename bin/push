@@ -3,3 +3,4 @@
 git push
 git push heroku
 heroku slugs:copy mc-control mc-dashboard
+heroku slugs:copy mc-control mc-poller
