@@ -77,7 +77,7 @@ exports.ThermoStat = class ThermoStat
       readings = @take_readings()
       readings.device_id = @id
       @socket.emit 'readings', readings
-      @log()
+      @log() unless process.env.SILENT_DEVICE is 'true'
 
     @reporter = setInterval(reporter, rate)
 
