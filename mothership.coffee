@@ -110,7 +110,7 @@ io.sockets.on "connection", (socket) ->
     console.log "listen-device", device_id
 
   socket.on "listen-device-hash", (data) ->
-    redis.del device_key(device_id), ->
+    redis.del device_key(data.id), ->
       redis.hset device_key(data.id), 'push_token', data.push_token
     socket.join data.id
     console.log "listen-device", data.id
