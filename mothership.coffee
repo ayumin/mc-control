@@ -85,9 +85,13 @@ last_readings = (readings, callback) ->
 
 compare_with_last_readings = (readings) ->
   last_readings readings, (last) ->
+    if last.status != 'RECALL' and readings.status == 'RECALL'
+      logline = "recall=true device_id=#{readings.device_id}"
+      console.log(logline)
+
     if last.status == 'OK' and readings.status == 'FAIL'
-      logline = "code=42 failure=true device_id=#{readings.device_id} "
-      logline += "lat=#{readings.lat} long=#{readings.long}"
+      logline = "code=42 failure=true device_id=#{readings.device_id}"
+      logline += " lat=#{readings.lat} long=#{readings.long}"
       console.log(logline)
 
 stream_devices_and_locations = (socket) ->
