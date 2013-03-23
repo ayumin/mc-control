@@ -60,6 +60,7 @@ $(function() {
 
   socket.on('add-device', function(device, readings) {
     if(DEBUG) console.log('add-device', device, readings)
+    console.log('add-device', device, readings)
     add_to_map(device, readings.lat, readings.long)
     known_devices.push(device)
   })

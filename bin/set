@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+#
+# set_temp <device_id> <key> <value>
+
+curl $API_URL/sensor/$1/set/$2/$3 -k
