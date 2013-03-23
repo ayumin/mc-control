@@ -106,6 +106,11 @@ io.sockets.on "connection", (socket) ->
     socket.join device_id
     console.log "listen-device", device_id
 
+  socket.on "listen-device-hash", (data) ->
+    redis.del(device_key(data.id))
+    socket.join data.id
+    console.log "listen-device", data.id
+
   socket.on "listen-mothership", ->
     socket.join "mothership"
     stream_devices_and_locations socket
