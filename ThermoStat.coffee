@@ -33,7 +33,7 @@ exports.ThermoStat = class ThermoStat
       'try multiple transports': false
       'reconnection delay': 500
       'backoff': 1
-      'max reconnection attempts': 100
+      'max reconnection attempts': 500
     if process.env.FORCE_NEW_CONNECTION
       settings['force new connection'] = true
     settings
