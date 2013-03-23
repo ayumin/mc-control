@@ -42,14 +42,12 @@ exports.ThermoStat = class ThermoStat
     @socket.on 'error', (err) ->
       console.log('error=true')
       console.log(err)
+      @socket.connect()
 
     @socket.on 'connect_failed', (err) ->
       console.log('connect_failed=true error=true')
       console.log(err)
-
-    @socket.on 'reconnect_failed', (err) ->
-      console.log('reconnect_failed=true error=true')
-      console.log(err)
+      @socket.connect()
 
   connect:  ->
     @socket = io.connect api_url, @connection_settings()
