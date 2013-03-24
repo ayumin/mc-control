@@ -2,7 +2,8 @@ thermostat = require('./ThermoStat')
 
 five = require("johnny-five")
 
-LED_PIN = 13
+RED_LED_PIN = 12
+GRN_LED_PIN = 13
 TEMP_SENSOR_PIN = 'A0'
 TEMP_RATE = parseInt(process.env.TEMP_RATE || 1)
 
@@ -34,10 +35,16 @@ exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
     parseFloat(location.toFixed(4))
 
   process_readings: (readings) ->
-    if @led
-      @led.stop().on()  if @last.status != 'FAIL' and readings.status == 'FAIL'
-      @led.strobe(500)  if @last.status != 'RECALL' and readings.status == 'RECALL'
-      @led.stop().off() if @last.status != 'OK' and readings.status == 'OK'
+    if @red_led && @green_led
+      if @last.status != 'FAIL' and readings.status == 'FAIL'
+        @red_led.stop().on()  
+        @green_led.off()
+      if @last.status != 'RECALL' and readings.status == 'RECALL'
+        @red_led.strobe(500)  
+        @green_led.off()
+      if @last.status != 'OK' and readings.status == 'OK'
+        @red_led.stop().off() 
+        @green_led.on()
     @last = readings
 
   take_readings: () ->
@@ -51,14 +58,19 @@ exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
 
   init_board: () ->
     @board.on "ready", () =>
-      @led = new five.Led(LED_PIN)
+      @green_led = new five.Led(GRN_LED_PIN)
+      @green_led.on()
+      @red_led = new five.Led(RED_LED_PIN)
+      @red_led.off()
       @temp_sensor = new five.Sensor
         pin: TEMP_SENSOR_PIN
         freq: TEMP_RATE * 1000
 
     @socket.on 'control-device', (settings) =>
-      @led.on()  if settings.led?.match(/on/i)
-      @led.off() if settings.led?.match(/off/i)
+      @green_led.on()  if settings.green_led?.match(/on/i)
+      @green_led.off() if settings.green_led?.match(/off/i)
+      @red_led.on()  if settings.red_led?.match(/on/i)
+      @red_led.off() if settings.red_led?.match(/off/i)
 
   # start the timers
   start: () ->
