@@ -1,1 +1,1 @@
-API_URL=http://mc-control.herokuapp.com ./node_modules/.bin/coffee RealThermoStat.coffee
+BATTERY_DRAIN=60 API_URL=http://mc-control.herokuapp.com ./node_modules/.bin/coffee RealThermoStat.coffee
