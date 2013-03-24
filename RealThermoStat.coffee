@@ -4,6 +4,9 @@ five = require("johnny-five")
 
 RED_LED_PIN = 12
 GRN_LED_PIN = 13
+# Set GRN_LED_PIN to 9 to make it blue
+GRN_LED_PIN = 9
+
 TEMP_SENSOR_PIN = 'A0'
 TEMP_RATE = parseInt(process.env.TEMP_RATE || 3)
 
