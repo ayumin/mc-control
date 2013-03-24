@@ -5,7 +5,7 @@ five = require("johnny-five")
 RED_LED_PIN = 12
 GRN_LED_PIN = 13
 TEMP_SENSOR_PIN = 'A0'
-TEMP_RATE = parseInt(process.env.TEMP_RATE || 1)
+TEMP_RATE = parseInt(process.env.TEMP_RATE || 3)
 
 exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
 
