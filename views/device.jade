@@ -39,13 +39,11 @@ div#device(data-id= device_id)
         td#status
 
       tr
-        th Messages
+        th#control_header Control
         td
           form#send_to_device.form-inline
-            label Key:
-              input.input-small(type='text', name='key')
-            label Value:
-              input.input-small(type='text', name='value')
+            input.input-small(type='text', name='key', placeholder="Key")
+            input.input-small(type='text', name='value', placeholder="Value")
             button(type='button').btn.btn-primary Send
 
     #graphs.span6

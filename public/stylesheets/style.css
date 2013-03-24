@@ -83,3 +83,15 @@ dl dd code { max-width: 320px; overflow: scroll}
   float: left;
   font-weight: bold;
 }
+
+#control_header {
+  vertical-align: middle;
+}
+
+#send_to_device {
+  margin-bottom: 0px;
+}
+
+#send_to_device input {
+  margin-right: 8px;
+}
