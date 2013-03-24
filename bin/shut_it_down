@@ -12,7 +12,7 @@ then
   heroku addons:remove tempodb -a l2tempo
   echo "wait ..."
   sleep 5
-  heroku addons:add tempodb:starter -a l2tempo
+  heroku addons:add tempodb:production -a l2tempo
   ./bin/update_config
   heroku addons:open tempodb -a l2tempo
 fi
