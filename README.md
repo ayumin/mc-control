@@ -20,19 +20,27 @@ the device.
 ## ENV Vars
 
     API_URL - url sensors connect to
-    BATTERY_DRAIN - rate of battery drain in one percent per seconds
-    TEMP_RATE - number of seconds between using next temp reading
-    READINGS_INTERVAL - rate, in seconds, for each reading
-    SENSORS - number of device connections opened by the `int_sensor` and `uuid_sensor` processes
+    BATTERY_DRAIN - rate of battery drain in one percent per X seconds
+    DASHBOARD_READINGS_INTERVAL - rate at which to sent analytics to the dashboad
+    HTTP_PASSWORD - http basic password
     NODE_ENV - development or production environment
+    READINGS_INTERVAL - rate, in seconds, for sending readings to the server
+    SENSORS - number of device connections opened by the `int_sensor` and `uuid_sensor` processes
+    SILENT_DEVICE - set to 'true' to stop devices from logging every reading (they are
+      already logged by the server)
+    SINGLE_DYNO_MODE - don't use redis pub/sub for socket.io (can't scale past 1 web process)
+    TEMP_RATE - number of seconds between using next temp reading from a city
+    TRANSPORTS - comma separated list of transport protocols for socket.io
 
     #Redis Add-ON
-    heroku addons:add redistogo
-    -or-
     heroku addons:add redisgreen
-    REDISTOGO_URL
+
+    set REDIS_NAME to env var with redis url if not using REDISGREEN_URL for redis url
 
     #For History API - credentials come from l2tempo
+    # you can use bin/update_config to push the proper creds after
+    # dropping and re-adding the tempodb add-on from l2tempo
+
     TEMPODB_API_HOST
     TEMPODB_API_KEY
     TEMPODB_API_PORT
@@ -46,6 +54,7 @@ the device.
     fix_device <device_id> - fix a specific device
     fail_n <n> - fail N devices
     reset - reset the redis database
+    real_device - scrit to run on the Raspberry PI to start the "real" device
     set_temp <device_id> <temp> - set the temp of a specific device
     update_config - update the app with the TEMPODB creds from l2tempo
     web - run the web server on PORT
