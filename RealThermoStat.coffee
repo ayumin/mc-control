@@ -7,6 +7,10 @@ GRN_LED_PIN = 13
 TEMP_SENSOR_PIN = 'A0'
 TEMP_RATE = parseInt(process.env.TEMP_RATE || 3)
 
+FAIL = /fail/i
+OK   = /ok/i
+RECALL = /recall/i
+
 exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
 
   constructor: () ->
@@ -38,17 +42,17 @@ exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
     if @temp > 200
       @status = 'FAIL'
 
-    if @last.status == 'FAIL' and @temp < 200
+    if /fail/i.test @last.status and @temp < 200
       @status = 'OK'
 
     if @red_led && @green_led
-      if @last.status != 'FAIL' and readings.status == 'FAIL'
+      if !FAIL.test @last.status and FAIL.test readings.status
         @red_led.stop().on()
         @green_led.stop().off()
-      if @last.status != 'RECALL' and readings.status == 'RECALL'
+      if !RECALL.test @last.status and RECALL.test readings.status
         @red_led.strobe(500)
         @green_led.strobe(500)
-      if @last.status != 'OK' and readings.status == 'OK'
+      if !OK.test @last.status and OK.test readings.status
         @red_led.stop().off()
         @green_led.stop().on()
     @last = readings
