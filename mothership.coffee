@@ -7,6 +7,10 @@ redis = config.createRedisClient()
 tempo = require("./tempo")
 moment = require('moment')
 
+FAIL = /fail/i
+OK   = /ok/i
+RECALL = /recall/i
+
 connection_expiry_seconds = parseInt(process.env.CONNECTION_EXPIRY || "30")
 
 time = -> (new Date()).getTime()
@@ -86,12 +90,12 @@ last_readings = (readings, callback) ->
 
 compare_with_last_readings = (readings) ->
   last_readings readings, (last) ->
-    if last.status != 'RECALL' and readings.status == 'RECALL'
+    if !RECALL.test last.status and RECALL.test readings.status
       redis.hget device_key(readings.device_id), 'push_token', (err, push_token) ->
         logline = "recall=true device_id=#{readings.device_id} push_token=#{push_token}"
         console.log(logline)
 
-    if last.status == 'OK' and readings.status == 'FAIL'
+    if !OK.test last.status and FAIL.test readings.status
       logline = "code=42 failure=true device_id=#{readings.device_id}"
       logline += " lat=#{readings.lat} long=#{readings.long}"
       console.log(logline)
