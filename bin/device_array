@@ -49,6 +49,6 @@ kick = (i) ->
     s = new devices.CityThermoStat(id, report)
     sensors[id] = s
     s.start()
-  setTimeout(func, Math.random()*5000)
+  setTimeout(func, Math.floor(Math.random()*10000))
 
 kick(num) for num in [1..n]
