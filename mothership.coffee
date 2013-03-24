@@ -64,7 +64,7 @@ app.delete '/user/:user/device', (req, res) ->
     res.send('ok')
 
 control_readings = (readings) ->
-  if readings.battery and readings.battery < 1
+  if readings.battery and readings.battery <= 2
     init: true
 
 refresh_device_connection = (device_id) ->
