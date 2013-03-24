@@ -40,11 +40,10 @@ exports.ThermoStat = class ThermoStat
     settings
 
   hookup_errors: ->
-    sock = @socket
-    process.on "uncaughtException", (err) ->
+    process.on "uncaughtException", (err) =>
       console.log('uncaught_error=true', err)
-      sock.disconnect()
-      sock.connect()
+      @socket.disconnect()
+      @socket.connect()
 
     @socket.on 'error', (err) ->
       console.log('error=true', err)
