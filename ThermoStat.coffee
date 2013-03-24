@@ -60,7 +60,10 @@ exports.ThermoStat = class ThermoStat
         @init()
       else
         for key in @safe_keys()
-          this[key] = settings[key] if settings[key]
+          if value = settings[key]
+            value = parseFloat(value)   if /temp|battery/i.test(key) 
+            value = value.toUpperCase() if /status/i.test(key)
+            this[key] = value 
 
     @hookup_errors()
 

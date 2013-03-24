@@ -42,17 +42,20 @@ exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
     if @temp > 200
       @status = 'FAIL'
 
-    if /fail/i.test @last.status and @temp < 200
+    if FAIL.test @last.status and @temp < 200
       @status = 'OK'
 
     if @red_led && @green_led
-      if !FAIL.test @last.status and FAIL.test readings.status
+      if (!FAIL.test(@last.status)) and FAIL.test(readings.status)
+        console.log('failmode')
         @red_led.stop().on()
         @green_led.stop().off()
-      if !RECALL.test @last.status and RECALL.test readings.status
+      if (!RECALL.test(@last.status)) and RECALL.test(readings.status)
+        console.log('recallmode')
         @red_led.strobe(500)
         @green_led.strobe(500)
-      if !OK.test @last.status and OK.test readings.status
+      if (!OK.test(@last.status)) and OK.test(readings.status)
+        console.log('allok')
         @red_led.stop().off()
         @green_led.stop().on()
     @last = readings
