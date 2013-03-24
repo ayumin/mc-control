@@ -12,6 +12,10 @@ exports.ThermoStat = class ThermoStat
     @battery = 100
     @status = 'OK'
     @temp = 0
+    process.on "uncaughtException", (err) =>
+      console.log('uncaught_error=true', err)
+      @socket.disconnect()
+      @connect()
 
   safe_keys: () -> ['battery', 'status', 'temp']
 
@@ -40,20 +44,15 @@ exports.ThermoStat = class ThermoStat
     settings
 
   hookup_errors: ->
-    process.on "uncaughtException", (err) =>
-      console.log('uncaught_error=true', err)
-      @socket.disconnect()
-      @socket.connect()
-
     @socket.on 'error', (err) ->
       console.log('error=true', err)
       @socket.disconnect()
-      @socket.connect()
+      @connect()
 
     @socket.on 'connect_failed', (err) ->
       console.log('connect_failed=true error=true', err)
       @socket.disconnect()
-      @socket.connect()
+      @connect()
 
   update: ->
     git_pull = spawn('git', ['pull'])
