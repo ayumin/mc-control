@@ -2,14 +2,14 @@
 
 It's like there's a network of machines in the sky.
 
-This app is a demo of bi-directional low-latency communication using
+This app is a demo of machine to machine bi-directional low-latency communication using
 websockets.  It is a simulation of thousands of network-enabled
 ThermoStats.  Each ThermoStat has an internal state that it communicates
 to the "mothership."  The "mothership" can return control messages to
 the device.
 
 
-## Messages
+## WebSocket Messages
 
 `listen-device` - register interest in a device's `control-device` and `readings` channels.
 `listen-mothership` - register interest in the mother's status (number of connected devices)
@@ -24,12 +24,15 @@ the device.
     TEMP_RATE - number of seconds between using next temp reading
     READINGS_INTERVAL - rate, in seconds, for each reading
     SENSORS - number of device connections opened by the `int_sensor` and `uuid_sensor` processes
-    NODE_ENV
+    NODE_ENV - development or production environment
 
     #Redis Add-ON
+    heroku addons:add redistogo
+    -or-
+    heroku addons:add redisgreen
     REDISTOGO_URL
 
-    #For History API - heroku addons:add tempodb
+    #For History API - credentials come from l2tempo
     TEMPODB_API_HOST
     TEMPODB_API_KEY
     TEMPODB_API_PORT
@@ -44,9 +47,7 @@ the device.
     fail_n <n> - fail N devices
     reset - reset the redis database
     set_temp <device_id> <temp> - set the temp of a specific device
-    update_config - update the app with the TEMPODB creds from l2temp
-    warm <start_dynos> <stop_dynos> <delay> - scale the sensor dynos from
-      start to stop with a sleep of delay, defaults from 0 to 100 sleeping 60s
+    update_config - update the app with the TEMPODB creds from l2tempo
     web - run the web server on PORT
 
 
