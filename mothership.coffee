@@ -151,9 +151,10 @@ io.sockets.on "connection", (socket) ->
 
   socket.on "disconnect", ->
     #cleanup when a device disconnects
-    console.log "disconnecting"
+    console.log "socket-disconnect=true"
     socket.get "device-id", (err, id) ->
-      console.log "disconnection #{id}"
+      return unless id
+      console.log "device-disconnect-start=#{id}"
       io.sockets.in('mothership').emit('remove-device', id)
       redis.zrem "devices", id
       redis.del device_key(id)
