@@ -41,12 +41,11 @@ div#device(data-id= device_id)
       tr
         th Messages
         td
-          form#send_to_device
+          form#send_to_device.form-inline
             label Key:
-            input(type='text', name='key')
+              input.input-small(type='text', name='key')
             label Value:
-            input(type='text', name='value')
-            br
+              input.input-small(type='text', name='value')
             button(type='button').btn.btn-primary Send
 
     #graphs.span6
