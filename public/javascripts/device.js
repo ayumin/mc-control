@@ -64,9 +64,9 @@ $(function() {
     set_battery(readings.battery);
 
     //update status string color
-    if(readings.status == 'OK'){
+    if(readings.status.match(/ok/i)){
       $('#status').css('color', 'green');
-    }else if(readings.status.match(/FAIL/)){
+    }else if(readings.status.match(/fail/i)){
       $('#status').css('color', 'red');
     }else{
       $('#status').css('color', '#c09853');
