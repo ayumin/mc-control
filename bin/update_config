@@ -1,4 +1,6 @@
-#! /usr/bin/env sh
+#! /usr/bin/env bash
 
-heroku config:set TEMPODB_API_SECRET=$(heroku config:get TEMPODB_API_SECRET -a l2tempo)
-heroku config:set TEMPODB_API_KEY=$(heroku config:get TEMPODB_API_KEY -a l2tempo)
+for app in mc-control mc-dashboard mc-poller
+do
+  heroku config:set TEMPODB_API_SECRET=$(heroku config:get TEMPODB_API_SECRET -a l2tempo) TEMPODB_API_KEY=$(heroku config:get TEMPODB_API_KEY -a l2tempo) -a $app
+done
