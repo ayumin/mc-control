@@ -90,12 +90,12 @@ last_readings = (readings, callback) ->
 
 compare_with_last_readings = (readings) ->
   last_readings readings, (last) ->
-    if !RECALL.test last.status and RECALL.test readings.status
+    if (!RECALL.test(last.status)) and RECALL.test(readings.status)
       redis.hget device_key(readings.device_id), 'push_token', (err, push_token) ->
         logline = "recall=true device_id=#{readings.device_id} push_token=#{push_token}"
         console.log(logline)
 
-    if !OK.test last.status and FAIL.test readings.status
+    if (!OK.test(last.status)) and FAIL.test(readings.status)
       logline = "code=42 failure=true device_id=#{readings.device_id}"
       logline += " lat=#{readings.lat} long=#{readings.long}"
       console.log(logline)
