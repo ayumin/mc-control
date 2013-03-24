@@ -1,4 +1,5 @@
 io         = require 'socket.io-client'
+spawn      = require('child_process').spawn
 
 api_url    = process.env.API_URL
 exports.battery_drain_rate = process.env.BATTERY_DRAIN || 5
@@ -49,6 +50,14 @@ exports.ThermoStat = class ThermoStat
       @socket.disconnect()
       @socket.connect()
 
+  update: ->
+    git_pull = spawn('git', ['pull'])
+    git_pull.stdout.on 'data', (data) -> console.log(data.toString())
+    git_pull.stderr.on 'data', (data) -> console.log(data.toString())
+    git_pull.on 'close', (code) -> 
+      console.log "git exit with #{code}"
+      process.exit()
+
   connect:  ->
     @socket = io.connect api_url, @connection_settings()
     @socket.on 'connect', () =>
@@ -58,6 +67,8 @@ exports.ThermoStat = class ThermoStat
       console.log('control-message: ', settings)
       if(settings.init)
         @init()
+      else if (settings.update)
+        @update()
       else
         for key in @safe_keys()
           if value = settings[key]
