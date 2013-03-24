@@ -45,7 +45,7 @@ exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
     if @temp > 200
       @status = 'FAIL'
 
-    if FAIL.test @last.status and @temp < 200
+    if (FAIL.test(@last.status)) and (@temp < 200)
       @status = 'OK'
 
     if @red_led && @green_led
