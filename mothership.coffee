@@ -8,7 +8,6 @@ tempo = require("./tempo")
 moment = require('moment')
 
 connection_expiry_seconds = parseInt(process.env.CONNECTION_EXPIRY || "30")
-mothership_interval       = parseInt(process.env.MOTHERSHIP_INTERVAL || 5)
 
 time = -> (new Date()).getTime()
 
@@ -152,21 +151,14 @@ io.sockets.on "connection", (socket) ->
 
   socket.on "disconnect", ->
     #cleanup when a device disconnects
+    console.log "socket-disconnect=true"
     socket.get "device-id", (err, id) ->
+      return unless id
+      console.log "device-disconnect-start=#{id}"
       io.sockets.in('mothership').emit('remove-device', id)
       redis.zrem "devices", id
       redis.del device_key(id)
       console.log "device-disconnect=" + id
-
-mothershipReadings = ->
-  readings = {}
-  redis.zcard "devices", (err, connections) ->
-    redis.get 'readings-throughput', (err, count) ->
-      readings.throughput  = count
-      readings.connections = connections
-      io.sockets.in('mothership').emit('mothership-readings', readings)
-
-setInterval mothershipReadings, mothership_interval * 1000
 
 app.listen process.env.PORT or 3000, ->
   console.log "Express server listening on port %d in %s mode", app.address().port, app.settings.env

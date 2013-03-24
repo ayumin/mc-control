@@ -1,6 +1,8 @@
 config = require './configure'
-redis = config.createRedisClient()
+http   = require("http")
+redis  = config.createRedisClient()
 
+readings_interval = parseInt(process.env.DASHBOARD_READINGS_INTERVAL || 5)
 now = -> (new Date()).getTime()
 
 # Prune Device List
@@ -19,3 +21,36 @@ set_throughput = ->
       console.log "throughput=#{throughput}"
       redis.set 'readings-count', 0
 setInterval set_throughput, throughput_interval
+
+io = require("socket.io").listen(http.createServer())
+
+io.configure "production", ->
+  io.set "transports", process.env.TRANSPORTS.split(',')
+  io.set "polling duration", 7
+  io.enable 'browser client minification'
+  io.enable 'browser client etag'
+  io.enable 'browser client gzip'
+  io.set 'log level', parseInt(process.env.SOCKETIO_LOG_LEVEL || 1)
+
+# redis pub/sub
+io.configure ->
+  io.set "heartbeat interval", 10
+
+  if (!process.env.SINGLE_DYNO_MODE)
+    RedisStore = require("socket.io/lib/stores/redis")
+    io.set 'store', new RedisStore
+      redis    : require("redis")
+      redisPub : config.createRedisClient()
+      redisSub : config.createRedisClient()
+      redisClient : config.createRedisClient()
+
+# Send out Mothership readings
+mothershipReadings = ->
+  readings = {}
+  redis.zcard "devices", (err, connections) ->
+    redis.get 'readings-throughput', (err, count) ->
+      readings.throughput  = count
+      readings.connections = connections
+      io.sockets.in('mothership').emit('mothership-readings', readings)
+
+setInterval mothershipReadings, readings_interval * 1000

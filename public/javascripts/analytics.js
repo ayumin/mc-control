@@ -23,7 +23,6 @@ $(function() {
 
   socket.on('connect', function(){ socket.emit('listen-mothership') });
 
-  var known_devices = [];
   var markers = {};
   var locations = {};
 
@@ -60,17 +59,14 @@ $(function() {
 
   socket.on('add-device', function(device, readings) {
     if(DEBUG) console.log('add-device', device, readings)
-    console.log('add-device', device, readings)
     add_to_map(device, readings.lat, readings.long)
-    known_devices.push(device)
   })
 
   socket.on('remove-device', function(device) {
-    if(DEBUG) console.log('remove-device', device)
+    if(DEBUG) console.log('remove-device', device, markers[device])
     if (markers[device]) {
       markers[device].setMap(null);
       delete markers[device];
     }
-    known_devices.splice(known_devices.indexOf(device), 1);
   })
 });
