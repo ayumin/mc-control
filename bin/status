@@ -1,0 +1,7 @@
+#! /usr/bin/env bash
+
+for app in mc-control mc-dashboard mc-errortrends l2tempo l2crm l2airship
+do
+  echo heroku ps -a $app
+  heroku ps -a $app
+done
