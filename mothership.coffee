@@ -95,7 +95,7 @@ compare_with_last_readings = (readings) ->
         logline = "recall=true device_id=#{readings.device_id} push_token=#{push_token}"
         console.log(logline)
 
-    if (!OK.test(last.status)) and FAIL.test(readings.status)
+    if (!FAIL.test(last.status)) and FAIL.test(readings.status)
       logline = "code=42 failure=true device_id=#{readings.device_id}"
       logline += " lat=#{readings.lat} long=#{readings.long}"
       console.log(logline)
