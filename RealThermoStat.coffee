@@ -1,9 +1,12 @@
+spawn      = require("child_process").spawn
 thermostat = require('./ThermoStat')
 
 five = require("johnny-five")
 
 RED_LED_PIN = 12
 GRN_LED_PIN = 13
+BLU_LED_PIN = 9
+
 # Set GRN_LED_PIN to 9 to make it blue
 # GRN_LED_PIN = 9
 
@@ -76,12 +79,25 @@ exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
     @process_readings(readings)
     readings
 
+  update: ->
+    @green_led.off()
+    @red_led.on()
+    @blue_led.on()
+    git_pull = spawn('git', ['pull'])
+    git_pull.stdout.on 'data', (data) -> console.log(data.toString())
+    git_pull.stderr.on 'data', (data) -> console.log(data.toString())
+    git_pull.on 'close', (code) =>
+      console.log "git exit with #{code}"
+      process.exit()
+
   init_board: () ->
     @board.on "ready", () =>
       @green_led = new five.Led(GRN_LED_PIN)
       @green_led.on()
       @red_led = new five.Led(RED_LED_PIN)
       @red_led.off()
+      @blue_led = new five.Led(BLU_LED_PIN)
+      @blue_led.off()
       @temp_sensor = new five.Sensor
         pin: TEMP_SENSOR_PIN
         freq: TEMP_RATE * 1000
