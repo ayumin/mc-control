@@ -42,11 +42,15 @@ exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
     parseFloat(location.toFixed(4))
 
   process_readings: (readings) ->
-    if @temp > 200
-      @status = 'FAIL'
 
-    if (FAIL.test(@last.status)) and (@temp < 200)
-      @status = 'OK'
+    # commented out because this prevents manual failures from being triggered
+    # as it recovers from them as long as the temperature is < 200
+
+    # if @temp > 200
+    #   @status = 'FAIL'
+
+    # if (FAIL.test(@last.status)) and (@temp < 200)
+    #   @status = 'OK'
 
     if @red_led && @green_led
       if (!FAIL.test(@last.status)) and FAIL.test(readings.status)
