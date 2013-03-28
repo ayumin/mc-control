@@ -8,7 +8,7 @@ GRN_LED_PIN = 13
 BLU_LED_PIN = 9
 
 # Set GRN_LED_PIN to 9 to make it blue
-GRN_LED_PIN = 9
+# GRN_LED_PIN = 9
 
 TEMP_SENSOR_PIN = 'A0'
 TEMP_RATE = parseInt(process.env.TEMP_RATE || 3)
