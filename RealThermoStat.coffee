@@ -92,12 +92,12 @@ exports.RealThermoStat = class RealThermoStat extends thermostat.ThermoStat
 
   init_board: () ->
     @board.on "ready", () =>
-      @green_led = new five.Led(GRN_LED_PIN)
-      @green_led.on()
       @red_led = new five.Led(RED_LED_PIN)
       @red_led.off()
       @blue_led = new five.Led(BLU_LED_PIN)
       @blue_led.off()
+      @green_led = new five.Led(GRN_LED_PIN)
+      @green_led.on()
       @temp_sensor = new five.Sensor
         pin: TEMP_SENSOR_PIN
         freq: TEMP_RATE * 1000
