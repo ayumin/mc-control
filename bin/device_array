@@ -32,7 +32,7 @@ console.log("Weather Information Parsed")
 
 if mode == 'uuid'
   uuid = require 'node-uuid'
-  next = (i) -> uuid.v4()
+  next = (i) -> "#{process.env.PS}.#{uuid.v4()}"
 else
   next = (i) -> i
 
