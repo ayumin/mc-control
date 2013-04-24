@@ -92,6 +92,8 @@ compare_with_last_readings = (readings) ->
   last_readings readings, (last) ->
     if (!RECALL.test(last.status)) and RECALL.test(readings.status)
       redis.hget device_key(readings.device_id), 'push_token', (err, push_token) ->
+        # get push token from the environment
+        push_token = process.env.PUSH_TOKEN
         logline = "recall=true device_id=#{readings.device_id} push_token=#{push_token}"
         console.log(logline)
 
