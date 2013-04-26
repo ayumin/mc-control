@@ -67,6 +67,13 @@ app.delete '/user/:user/device', (req, res) ->
   redis.del 'user:' + req.params.user + ':device', (err) ->
     res.send('ok')
 
+app.get "/admin/fail_many", ensure_auth, (req, res) ->
+  num = req.query.num || 10
+  redis.zrange "devices", 0, -1, (error, devices) ->
+    async.parallel (devices[1..num].map (device_id) ->
+      (callback) -> fail(device_id, callback)),
+      () -> res.send "ok"
+
 control_readings = (readings) ->
   if readings.battery and readings.battery <= 2
     init: true
