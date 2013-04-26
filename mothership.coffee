@@ -73,6 +73,9 @@ app.get "/admin/fail_many", ensure_auth, (req, res) ->
   num = req.query.num || 10
   console.log "fail_many num=#{num}"
   redis.zrange "devices", 0, -1, (error, devices) ->
+    devices.unshift "raspi.mc-device01"
+    devices.unshift "raspi.mc-device02"
+    devices.unshift "raspi.mc-device03"
     async.parallel (devices[1..num].map (device_id) ->
       (callback) -> fail(device_id, callback)),
       () -> res.send "ok"
