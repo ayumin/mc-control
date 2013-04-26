@@ -1,5 +1,6 @@
 # Device MotherShip
 #
+agent = require("superagent")
 async = require("async")
 coffee = require("coffee-script")
 config = require("./configure")
