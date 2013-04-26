@@ -70,6 +70,7 @@ app.delete '/user/:user/device', (req, res) ->
 
 app.get "/admin/fail_many", ensure_auth, (req, res) ->
   num = req.query.num || 10
+  console.log "fail_many num=#{num}"
   redis.zrange "devices", 0, -1, (error, devices) ->
     async.parallel (devices[1..num].map (device_id) ->
       (callback) -> fail(device_id, callback)),
@@ -109,6 +110,19 @@ compare_with_last_readings = (readings) ->
       logline = "code=42 failure=true device_id=#{readings.device_id}"
       logline += " lat=#{readings.lat} long=#{readings.long}"
       console.log(logline)
+
+fail_url = (device_id) ->
+  "#{process.env.API_URL}/sensor/#{device_id}/set/status/FAIL"
+
+fail = (device_id, async_callback) ->
+  console.log('fail', device_id)
+  console.log(fail_url(device_id))
+  agent
+    .get(fail_url(device_id))
+    .end (err, res) ->
+      console.log err if err
+      console.log('failed', device_id)
+      async_callback()
 
 stream_devices_and_locations = (socket) ->
   redis.zrange "devices", 0, -1, (error, devices) ->
