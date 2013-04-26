@@ -1,5 +1,6 @@
 # Device MotherShip
 #
+async = require("async")
 coffee = require("coffee-script")
 config = require("./configure")
 express = require("express")
