@@ -47,7 +47,7 @@ $(function() {
   socket.on('mothership-readings', function(readings) {
     $('#device-count').text(format_number(readings.connections))
     $('#throughput').text(format_number(readings.throughput))
-    if(DEBUG) console.log('[DEBG readings]' + readings)
+    if(DEBUG) console.log(readings)
 
     if(readings.connections == 0){
       $.each(markers, function(){
