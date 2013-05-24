@@ -1,7 +1,7 @@
 style
   .chart rect { fill: steelblue; stroke: white; }
 
-h2 Device Control Panel
+h2 デバイスモニタ
 
 div#device(data-id= device_id)
 
@@ -9,37 +9,37 @@ div#device(data-id= device_id)
 
     table.span6.table.table-striped.table-bordered#device-attributes
       tr
-        th Device ID
+        th デバイスID
         td= device_id
       tr
-        th Current City
+        th 都市
         td
           span#city_name
       tr
-        th Current Country
+        th 国
         td
           span#country_name
       tr
-        th Current Location
+        th 位置情報
         td
           span#location
       tr
-        th Current Temp
+        th センサー情報
         td
           span#temp
           &deg;C
       tr
-        th Battery Level
+        th 電池残量
         td#battery_level
           span#battery_readings.pull-left
           .progress
             .bar
       tr
-        th Status
+        th 状態
         td#status
 
       tr
-        th#control_header Control
+        th#control_header コントロール
         td
           form#send_to_device.form-inline
             input.input-small(type='text', name='key', placeholder="Key")
@@ -48,11 +48,11 @@ div#device(data-id= device_id)
 
     #graphs.span6
 
-      h3 Temperature
+      h3 センサー情報
       div#tempchart
 
 .well#control_messages
-  h3 Control Messages
+  h3 メッセージ
   div#alerts
 
 script(type='text/javascript', src='/javascripts/device.js')
