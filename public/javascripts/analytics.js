@@ -12,7 +12,7 @@ $(function() {
 
   var map = new google.maps.Map(document.getElementById('map'), {
     center: new google.maps.LatLng(35.6662026, 139.731259), // Tokyo Midtown
-    zoom: 8,
+    zoom: 15,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     panControl: false,
     zoomControl: true,
