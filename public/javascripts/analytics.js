@@ -1,4 +1,4 @@
-DEBUG=false
+DEBUG=true
 
 $(function() {
 
@@ -11,8 +11,8 @@ $(function() {
   }
 
   var map = new google.maps.Map(document.getElementById('map'), {
-    center: new google.maps.LatLng(36.893738, 136.502165),
-    zoom: 6,
+    center: new google.maps.LatLng(35.6662026, 139.731259), // Tokyo Midtown
+    zoom: 8,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     panControl: false,
     zoomControl: true,

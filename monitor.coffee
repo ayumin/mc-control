@@ -46,6 +46,7 @@ io.configure ->
 
 # Send out Mothership readings
 mothershipReadings = ->
+  console.log "!! mothershipReadings !!"
   readings = {}
   redis.zcard "devices", (err, connections) ->
     redis.get 'readings-throughput', (err, count) ->
